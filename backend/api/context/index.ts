@@ -1,7 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { PrismaClient } from '@prisma/client'
+import { PubSub } from 'mercurius'
 import * as cryptoService from './cryptoService'
 import * as jwtService from './jwtService'
+import * as fileService from './fileService'
 
 const prisma = new PrismaClient()
 
@@ -10,6 +12,8 @@ export type Context = {
   cryptoService: typeof cryptoService
   jwtService: typeof jwtService
   userId: string | null
+  pubsub: PubSub
+  fileService: typeof fileService
 }
 
 export const context = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -20,8 +24,9 @@ export const context = async (request: FastifyRequest, reply: FastifyReply) => {
   
   return {
     prisma,
+    userId: tokenPayload?.sub ?? null,
     cryptoService,
     jwtService,
-    userId: tokenPayload?.sub ?? null
+    fileService
   }
 }

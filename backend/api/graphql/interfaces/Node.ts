@@ -35,7 +35,7 @@ export const NodeQuery = extendType({
 export const NodesQuery = extendType({
   type: 'Query',
   definition: t => {
-    t.list.field('nodes', {
+    t.list.nonNull.field('nodes', {
       type: 'Node',
       args: { ids: nonNull(list(nonNull('ID'))) },
       // @ts-ignore

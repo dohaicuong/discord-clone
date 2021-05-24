@@ -15,4 +15,76 @@ model User {
   email    String @unique
   password String
   username String
+  avatar   String?
+
+  friends User[]  @relation("Friends")
+  user    User?   @relation("Friends", fields: [userId], references: [id])
+  userId  String?
+
+  userServers UsersOnServers[]
+
+  messages Message[]
+}
+
+enum UserRole {
+  SERVER_OWNER
+  SERVER_BOOSTER
+  OTHER
+}
+
+model UsersOnServers {
+  id       String   @unique @default(cuid())
+  role     UserRole
+  nickname String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  server   Server @relation(fields: [serverId], references: [id])
+  serverId String
+
+  @@id([userId, serverId])
+}
+
+model Server {
+  id    String @id @default(cuid())
+  title String
+  logo  String?
+
+  serverUsers UsersOnServers[]
+
+  channelCategories ChannelCategory[]
+}
+
+model ChannelCategory {
+  id   String @id @default(cuid())
+  name String
+
+  server   Server? @relation(fields: [serverId], references: [id])
+  serverId String?
+
+  channels Channel[]
+}
+
+model Channel {
+  id   String @id @default(cuid())
+  name String
+
+  channelCategory   ChannelCategory? @relation(fields: [channelCategoryId], references: [id])
+  channelCategoryId String?
+
+  mesasges Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  author User   @relation(fields: [userId], references: [id])
+  userId String
 }

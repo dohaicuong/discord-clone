@@ -7,6 +7,7 @@ export const MeQuery = extendType({
       type: 'User',
       resolve: async (_, __, ctx) => {
         if (!ctx.userId) return null
+
         return ctx.prisma.user.findUnique({ where: { id: ctx.userId }})
       }
     })

@@ -5,15 +5,43 @@
 
 
 import { Context } from "./api/context/index"
-import { core } from "nexus"
+import { FileUploadPromise, Media } from "./api/graphql/scalars/Upload"
+import { core, connectionPluginCore } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     relayId<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "RelayId";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    datetime<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+    /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Upload";
+    media<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Media";
   }
 }
 declare global {
   interface NexusGenCustomOutputMethods<TypeName extends string> {
     relayId<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "RelayId";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    datetime<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
+    media<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Media";
+    /**
+     * Adds a Relay-style connection to the type, with numerous options for configuration
+     *
+     * @see https://nexusjs.org/docs/plugins/connection
+     */
+    connectionField<FieldName extends string>(
+      fieldName: FieldName,
+      config: connectionPluginCore.ConnectionFieldConfig<TypeName, FieldName>
+    ): void
   }
 }
 
@@ -23,11 +51,35 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  ChannelCategoryCreateInput: { // input type
+    name: string; // String!
+    serverId: NexusGenScalars['RelayId']; // RelayId!
+  }
+  ChannelCreateInput: { // input type
+    channelCategoryId: NexusGenScalars['RelayId']; // RelayId!
+    name: string; // String!
+  }
+  FriendAddInput: { // input type
+    friendId: NexusGenScalars['RelayId']; // RelayId!
+  }
+  FriendRemoveInput: { // input type
+    friendId: NexusGenScalars['RelayId']; // RelayId!
+  }
   LoginMutationInput: { // input type
     email: string; // String!
     password: string; // String!
   }
+  MessageCreateInput: { // input type
+    channelId: NexusGenScalars['RelayId']; // RelayId!
+    content: string; // String!
+  }
+  ServerCreateInput: { // input type
+    logo?: NexusGenScalars['Upload'] | null; // Upload
+    nickname?: string | null; // String
+    title: string; // String!
+  }
   SignupMutationInput: { // input type
+    avatar?: NexusGenScalars['Upload'] | null; // Upload
     email: string; // String!
     password: string; // String!
     username: string; // String!
@@ -35,6 +87,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  UserRole: "OTHER" | "SERVER_BOOSTER" | "SERVER_OWNER"
 }
 
 export interface NexusGenScalars {
@@ -43,29 +96,119 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  DateTime: any
+  Media: Media
   RelayId: any
+  Upload: FileUploadPromise
 }
 
 export interface NexusGenObjects {
+  Channel: { // root type
+    channelCategory?: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
+    name: string; // String!
+  }
+  ChannelCategory: { // root type
+    name: string; // String!
+    server?: NexusGenRootTypes['Server'] | null; // Server
+  }
+  ChannelCategoryConnection: { // root type
+    edges: NexusGenRootTypes['ChannelCategoryEdge'][]; // [ChannelCategoryEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  ChannelCategoryCreatePayload: { // root type
+    channelCategory?: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
+  }
+  ChannelCategoryEdge: { // root type
+    cursor: string; // String!
+    node: NexusGenRootTypes['ChannelCategory']; // ChannelCategory!
+  }
+  ChannelConnection: { // root type
+    edges: NexusGenRootTypes['ChannelEdge'][]; // [ChannelEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  ChannelCreatePayload: { // root type
+    channel: NexusGenRootTypes['Channel']; // Channel!
+  }
+  ChannelEdge: { // root type
+    cursor: string; // String!
+    node: NexusGenRootTypes['Channel']; // Channel!
+  }
+  FriendAddPayload: { // root type
+    friend?: NexusGenRootTypes['User'] | null; // User
+    user?: NexusGenRootTypes['User'] | null; // User
+  }
+  FriendRemovePayload: { // root type
+    friend?: NexusGenRootTypes['User'] | null; // User
+    user?: NexusGenRootTypes['User'] | null; // User
+  }
   LoginMutationPayload: { // root type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
+  Message: { // root type
+    content: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  MessageConnection: { // root type
+    edges: NexusGenRootTypes['MessageEdge'][]; // [MessageEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  MessageCreatePayload: { // root type
+    message: NexusGenRootTypes['Message']; // Message!
+  }
+  MessageEdge: { // root type
+    cursor: string; // String!
+    node: NexusGenRootTypes['Message']; // Message!
+  }
   Mutation: {};
+  PageInfo: { // root type
+    endCursor?: string | null; // String
+    hasNextPage: boolean; // Boolean!
+    hasPreviousPage: boolean; // Boolean!
+    startCursor?: string | null; // String
+  }
   Query: {};
+  Server: { // root type
+    title: string; // String!
+  }
+  ServerCreatePayload: { // root type
+    server?: NexusGenRootTypes['Server'] | null; // Server
+    userServer?: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
+  }
   SignupMutationPayload: { // root type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
+  Subscription: {};
   User: { // root type
     email: string; // String!
-    id: string; // ID!
     username: string; // String!
+  }
+  UserConnection: { // root type
+    edges: NexusGenRootTypes['UserEdge'][]; // [UserEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  UserEdge: { // root type
+    cursor: string; // String!
+    node: NexusGenRootTypes['User']; // User!
+  }
+  UsersOnServers: { // root type
+    nickname: string; // String!
+    role: NexusGenEnums['UserRole']; // UserRole!
+  }
+  UsersOnServersConnection: { // root type
+    edges: NexusGenRootTypes['UsersOnServersEdge'][]; // [UsersOnServersEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  UsersOnServersEdge: { // root type
+    cursor: string; // String!
+    node: NexusGenRootTypes['UsersOnServers']; // UsersOnServers!
   }
 }
 
 export interface NexusGenInterfaces {
-  Node: any;
+  Node: NexusGenRootTypes['Channel'] | NexusGenRootTypes['ChannelCategory'] | NexusGenRootTypes['Message'] | NexusGenRootTypes['Server'] | NexusGenRootTypes['User'] | NexusGenRootTypes['UsersOnServers'];
 }
 
 export interface NexusGenUnions {
@@ -73,30 +216,141 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Channel: { // field return type
+    channelCategory: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
+    id: string; // ID!
+    messages: NexusGenRootTypes['MessageConnection']; // MessageConnection!
+    name: string; // String!
+  }
+  ChannelCategory: { // field return type
+    channels: NexusGenRootTypes['ChannelConnection']; // ChannelConnection!
+    id: string; // ID!
+    name: string; // String!
+    server: NexusGenRootTypes['Server'] | null; // Server
+  }
+  ChannelCategoryConnection: { // field return type
+    edges: NexusGenRootTypes['ChannelCategoryEdge'][]; // [ChannelCategoryEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  ChannelCategoryCreatePayload: { // field return type
+    channelCategory: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
+  }
+  ChannelCategoryEdge: { // field return type
+    cursor: string; // String!
+    node: NexusGenRootTypes['ChannelCategory']; // ChannelCategory!
+  }
+  ChannelConnection: { // field return type
+    edges: NexusGenRootTypes['ChannelEdge'][]; // [ChannelEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  ChannelCreatePayload: { // field return type
+    channel: NexusGenRootTypes['Channel']; // Channel!
+  }
+  ChannelEdge: { // field return type
+    cursor: string; // String!
+    node: NexusGenRootTypes['Channel']; // Channel!
+  }
+  FriendAddPayload: { // field return type
+    friend: NexusGenRootTypes['User'] | null; // User
+    user: NexusGenRootTypes['User'] | null; // User
+  }
+  FriendRemovePayload: { // field return type
+    friend: NexusGenRootTypes['User'] | null; // User
+    user: NexusGenRootTypes['User'] | null; // User
+  }
   LoginMutationPayload: { // field return type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
+  Message: { // field return type
+    author: NexusGenRootTypes['User'] | null; // User
+    channel: NexusGenRootTypes['Channel'] | null; // Channel
+    content: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  MessageConnection: { // field return type
+    edges: NexusGenRootTypes['MessageEdge'][]; // [MessageEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  MessageCreatePayload: { // field return type
+    message: NexusGenRootTypes['Message']; // Message!
+  }
+  MessageEdge: { // field return type
+    cursor: string; // String!
+    node: NexusGenRootTypes['Message']; // Message!
+  }
   Mutation: { // field return type
+    channelCategoryCreate: NexusGenRootTypes['ChannelCategoryCreatePayload'] | null; // ChannelCategoryCreatePayload
+    channelCreate: NexusGenRootTypes['ChannelCreatePayload'] | null; // ChannelCreatePayload
+    friendAdd: NexusGenRootTypes['FriendAddPayload'] | null; // FriendAddPayload
+    friendRemove: NexusGenRootTypes['FriendAddPayload'] | null; // FriendAddPayload
     login: NexusGenRootTypes['LoginMutationPayload']; // LoginMutationPayload!
+    messageCreate: NexusGenRootTypes['MessageCreatePayload'] | null; // MessageCreatePayload
+    serverCreate: NexusGenRootTypes['ServerCreatePayload']; // ServerCreatePayload!
     signup: NexusGenRootTypes['SignupMutationPayload']; // SignupMutationPayload!
+  }
+  PageInfo: { // field return type
+    endCursor: string | null; // String
+    hasNextPage: boolean; // Boolean!
+    hasPreviousPage: boolean; // Boolean!
+    startCursor: string | null; // String
   }
   Query: { // field return type
     me: NexusGenRootTypes['User'] | null; // User
     node: NexusGenRootTypes['Node'] | null; // Node
-    nodes: Array<NexusGenRootTypes['Node'] | null> | null; // [Node]
+    nodes: NexusGenRootTypes['Node'][] | null; // [Node!]
+    users: NexusGenRootTypes['UserConnection']; // UserConnection!
+  }
+  Server: { // field return type
+    channelCategories: NexusGenRootTypes['ChannelCategoryConnection']; // ChannelCategoryConnection!
+    id: string; // ID!
+    title: string; // String!
+  }
+  ServerCreatePayload: { // field return type
+    server: NexusGenRootTypes['Server'] | null; // Server
+    userServer: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
   }
   SignupMutationPayload: { // field return type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
+  Subscription: { // field return type
+    messageCreated: NexusGenRootTypes['Message'] | null; // Message
+  }
   User: { // field return type
     email: string; // String!
+    friends: NexusGenRootTypes['UserConnection']; // UserConnection!
     id: string; // ID!
+    userServers: NexusGenRootTypes['UsersOnServersConnection']; // UsersOnServersConnection!
     username: string; // String!
+  }
+  UserConnection: { // field return type
+    edges: NexusGenRootTypes['UserEdge'][]; // [UserEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  UserEdge: { // field return type
+    cursor: string; // String!
+    node: NexusGenRootTypes['User']; // User!
+  }
+  UsersOnServers: { // field return type
+    id: string; // ID!
+    nickname: string; // String!
+    role: NexusGenEnums['UserRole']; // UserRole!
+    server: NexusGenRootTypes['Server']; // Server!
+    user: NexusGenRootTypes['User']; // User!
+  }
+  UsersOnServersConnection: { // field return type
+    edges: NexusGenRootTypes['UsersOnServersEdge'][]; // [UsersOnServersEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  UsersOnServersEdge: { // field return type
+    cursor: string; // String!
+    node: NexusGenRootTypes['UsersOnServers']; // UsersOnServers!
   }
   Node: { // field return type
     id: string; // ID!
@@ -104,27 +358,138 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Channel: { // field return type name
+    channelCategory: 'ChannelCategory'
+    id: 'ID'
+    messages: 'MessageConnection'
+    name: 'String'
+  }
+  ChannelCategory: { // field return type name
+    channels: 'ChannelConnection'
+    id: 'ID'
+    name: 'String'
+    server: 'Server'
+  }
+  ChannelCategoryConnection: { // field return type name
+    edges: 'ChannelCategoryEdge'
+    pageInfo: 'PageInfo'
+  }
+  ChannelCategoryCreatePayload: { // field return type name
+    channelCategory: 'ChannelCategory'
+  }
+  ChannelCategoryEdge: { // field return type name
+    cursor: 'String'
+    node: 'ChannelCategory'
+  }
+  ChannelConnection: { // field return type name
+    edges: 'ChannelEdge'
+    pageInfo: 'PageInfo'
+  }
+  ChannelCreatePayload: { // field return type name
+    channel: 'Channel'
+  }
+  ChannelEdge: { // field return type name
+    cursor: 'String'
+    node: 'Channel'
+  }
+  FriendAddPayload: { // field return type name
+    friend: 'User'
+    user: 'User'
+  }
+  FriendRemovePayload: { // field return type name
+    friend: 'User'
+    user: 'User'
+  }
   LoginMutationPayload: { // field return type name
     token: 'String'
     user: 'User'
   }
+  Message: { // field return type name
+    author: 'User'
+    channel: 'Channel'
+    content: 'String'
+    createdAt: 'DateTime'
+    id: 'ID'
+    updatedAt: 'DateTime'
+  }
+  MessageConnection: { // field return type name
+    edges: 'MessageEdge'
+    pageInfo: 'PageInfo'
+  }
+  MessageCreatePayload: { // field return type name
+    message: 'Message'
+  }
+  MessageEdge: { // field return type name
+    cursor: 'String'
+    node: 'Message'
+  }
   Mutation: { // field return type name
+    channelCategoryCreate: 'ChannelCategoryCreatePayload'
+    channelCreate: 'ChannelCreatePayload'
+    friendAdd: 'FriendAddPayload'
+    friendRemove: 'FriendAddPayload'
     login: 'LoginMutationPayload'
+    messageCreate: 'MessageCreatePayload'
+    serverCreate: 'ServerCreatePayload'
     signup: 'SignupMutationPayload'
+  }
+  PageInfo: { // field return type name
+    endCursor: 'String'
+    hasNextPage: 'Boolean'
+    hasPreviousPage: 'Boolean'
+    startCursor: 'String'
   }
   Query: { // field return type name
     me: 'User'
     node: 'Node'
     nodes: 'Node'
+    users: 'UserConnection'
+  }
+  Server: { // field return type name
+    channelCategories: 'ChannelCategoryConnection'
+    id: 'ID'
+    title: 'String'
+  }
+  ServerCreatePayload: { // field return type name
+    server: 'Server'
+    userServer: 'UsersOnServers'
   }
   SignupMutationPayload: { // field return type name
     token: 'String'
     user: 'User'
   }
+  Subscription: { // field return type name
+    messageCreated: 'Message'
+  }
   User: { // field return type name
     email: 'String'
+    friends: 'UserConnection'
     id: 'ID'
+    userServers: 'UsersOnServersConnection'
     username: 'String'
+  }
+  UserConnection: { // field return type name
+    edges: 'UserEdge'
+    pageInfo: 'PageInfo'
+  }
+  UserEdge: { // field return type name
+    cursor: 'String'
+    node: 'User'
+  }
+  UsersOnServers: { // field return type name
+    id: 'ID'
+    nickname: 'String'
+    role: 'UserRole'
+    server: 'Server'
+    user: 'User'
+  }
+  UsersOnServersConnection: { // field return type name
+    edges: 'UsersOnServersEdge'
+    pageInfo: 'PageInfo'
+  }
+  UsersOnServersEdge: { // field return type name
+    cursor: 'String'
+    node: 'UsersOnServers'
   }
   Node: { // field return type name
     id: 'ID'
@@ -132,9 +497,39 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Channel: {
+    messages: { // args
+      after?: string | null; // String
+      first: number; // Int!
+    }
+  }
+  ChannelCategory: {
+    channels: { // args
+      after?: string | null; // String
+      first: number; // Int!
+    }
+  }
   Mutation: {
+    channelCategoryCreate: { // args
+      input: NexusGenInputs['ChannelCategoryCreateInput']; // ChannelCategoryCreateInput!
+    }
+    channelCreate: { // args
+      input: NexusGenInputs['ChannelCreateInput']; // ChannelCreateInput!
+    }
+    friendAdd: { // args
+      input: NexusGenInputs['FriendAddInput']; // FriendAddInput!
+    }
+    friendRemove: { // args
+      input: NexusGenInputs['FriendRemoveInput']; // FriendRemoveInput!
+    }
     login: { // args
       input: NexusGenInputs['LoginMutationInput']; // LoginMutationInput!
+    }
+    messageCreate: { // args
+      input: NexusGenInputs['MessageCreateInput']; // MessageCreateInput!
+    }
+    serverCreate: { // args
+      input: NexusGenInputs['ServerCreateInput']; // ServerCreateInput!
     }
     signup: { // args
       input: NexusGenInputs['SignupMutationInput']; // SignupMutationInput!
@@ -147,20 +542,47 @@ export interface NexusGenArgTypes {
     nodes: { // args
       ids: string[]; // [ID!]!
     }
+    users: { // args
+      after?: string | null; // String
+      first: number; // Int!
+    }
+  }
+  Server: {
+    channelCategories: { // args
+      after?: string | null; // String
+      first: number; // Int!
+    }
+  }
+  User: {
+    friends: { // args
+      after?: string | null; // String
+      first: number; // Int!
+    }
+    userServers: { // args
+      after?: string | null; // String
+      first: number; // Int!
+    }
   }
 }
 
 export interface NexusGenAbstractTypeMembers {
+  Node: "Channel" | "ChannelCategory" | "Message" | "Server" | "User" | "UsersOnServers"
 }
 
 export interface NexusGenTypeInterfaces {
+  Channel: "Node"
+  ChannelCategory: "Node"
+  Message: "Node"
+  Server: "Node"
+  User: "Node"
+  UsersOnServers: "Node"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
@@ -211,6 +633,7 @@ declare global {
   interface NexusGenPluginTypeConfig<TypeName extends string> {
   }
   interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
+    
   }
   interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
   }
