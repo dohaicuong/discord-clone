@@ -7,5 +7,6 @@ export const User = objectType({
     // t.nonNull.id('id')
     t.nonNull.string('email')
     t.nonNull.string('username')
+    t.media('avatar')
   }
 })

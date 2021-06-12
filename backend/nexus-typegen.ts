@@ -170,6 +170,7 @@ export interface NexusGenObjects {
   }
   Query: {};
   Server: { // root type
+    logo?: NexusGenScalars['Media'] | null; // Media
     title: string; // String!
   }
   ServerCreatePayload: { // root type
@@ -182,6 +183,7 @@ export interface NexusGenObjects {
   }
   Subscription: {};
   User: { // root type
+    avatar?: NexusGenScalars['Media'] | null; // Media
     email: string; // String!
     username: string; // String!
   }
@@ -309,6 +311,7 @@ export interface NexusGenFieldTypes {
   Server: { // field return type
     channelCategories: NexusGenRootTypes['ChannelCategoryConnection']; // ChannelCategoryConnection!
     id: string; // ID!
+    logo: NexusGenScalars['Media'] | null; // Media
     title: string; // String!
   }
   ServerCreatePayload: { // field return type
@@ -323,6 +326,7 @@ export interface NexusGenFieldTypes {
     messageCreated: NexusGenRootTypes['Message'] | null; // Message
   }
   User: { // field return type
+    avatar: NexusGenScalars['Media'] | null; // Media
     email: string; // String!
     friends: NexusGenRootTypes['UserConnection']; // UserConnection!
     id: string; // ID!
@@ -448,6 +452,7 @@ export interface NexusGenFieldTypeNames {
   Server: { // field return type name
     channelCategories: 'ChannelCategoryConnection'
     id: 'ID'
+    logo: 'Media'
     title: 'String'
   }
   ServerCreatePayload: { // field return type name
@@ -462,6 +467,7 @@ export interface NexusGenFieldTypeNames {
     messageCreated: 'Message'
   }
   User: { // field return type name
+    avatar: 'Media'
     email: 'String'
     friends: 'UserConnection'
     id: 'ID'

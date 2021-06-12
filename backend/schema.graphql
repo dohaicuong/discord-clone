@@ -232,6 +232,7 @@ type Server implements Node {
 
   """Relay ID"""
   id: ID!
+  logo: Media
   title: String!
 }
 
@@ -266,6 +267,7 @@ type Subscription {
 scalar Upload
 
 type User implements Node {
+  avatar: Media
   email: String!
   friends(
     """Returns the elements in the list that come after the specified cursor"""

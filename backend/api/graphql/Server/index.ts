@@ -8,6 +8,7 @@ export const Server = objectType({
   definition: t => {
     t.implements('Node')
     t.nonNull.string('title')
+    t.media('logo')
   }
 })
 
