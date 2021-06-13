@@ -1,14 +1,39 @@
 export * from './MutationServerCreate'
 
 import { connectionFromPromisedArray } from "graphql-relay";
-import { enumType, extendType, objectType } from "nexus";
+import { enumType, extendType, inputObjectType, objectType } from "nexus";
 
+export const ServerUsersConnectionFilters = inputObjectType({
+  name: 'ServerUsersConnectionFilters',
+  definition: t => {
+    t.boolean('currentUser')
+  }
+})
 export const Server = objectType({
   name: 'Server',
   definition: t => {
     t.implements('Node')
     t.nonNull.string('title')
     t.media('logo')
+    t.nonNull.connectionField('serverUsers', {
+      type: 'UsersOnServers',
+      additionalArgs: {
+        filters: 'ServerUsersConnectionFilters',
+      },
+      // @ts-ignore
+      resolve: (server, { filters, ...args }, ctx) => {
+        return connectionFromPromisedArray(
+          ctx.prisma.server
+            .findUnique({ where: { id: (server as any).id }})
+            .serverUsers({
+              where: {
+                userId: filters?.currentUser ? (ctx.userId || undefined) : undefined
+              }
+            }),
+          args
+        )
+      }
+    })
   }
 })
 

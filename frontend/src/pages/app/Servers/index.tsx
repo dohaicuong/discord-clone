@@ -84,7 +84,7 @@ const Servers: React.FC<ServersProps> = props => {
             )
           })}
 
-          <AddServerAction user={data} />
+          <AddServerAction user={data as any} />
 
           <ServerItem
             title='Explore Public Server'

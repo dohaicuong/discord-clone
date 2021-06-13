@@ -233,6 +233,14 @@ type Server implements Node {
   """Relay ID"""
   id: ID!
   logo: Media
+  serverUsers(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+    filters: ServerUsersConnectionFilters
+
+    """Returns the first n elements from the list."""
+    first: Int!
+  ): UsersOnServersConnection!
   title: String!
 }
 
@@ -245,6 +253,10 @@ input ServerCreateInput {
 type ServerCreatePayload {
   server: Server
   userServer: UsersOnServers
+}
+
+input ServerUsersConnectionFilters {
+  currentUser: Boolean
 }
 
 input SignupMutationInput {

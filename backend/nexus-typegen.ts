@@ -78,6 +78,9 @@ export interface NexusGenInputs {
     nickname?: string | null; // String
     title: string; // String!
   }
+  ServerUsersConnectionFilters: { // input type
+    currentUser?: boolean | null; // Boolean
+  }
   SignupMutationInput: { // input type
     avatar?: NexusGenScalars['Upload'] | null; // Upload
     email: string; // String!
@@ -312,6 +315,7 @@ export interface NexusGenFieldTypes {
     channelCategories: NexusGenRootTypes['ChannelCategoryConnection']; // ChannelCategoryConnection!
     id: string; // ID!
     logo: NexusGenScalars['Media'] | null; // Media
+    serverUsers: NexusGenRootTypes['UsersOnServersConnection']; // UsersOnServersConnection!
     title: string; // String!
   }
   ServerCreatePayload: { // field return type
@@ -453,6 +457,7 @@ export interface NexusGenFieldTypeNames {
     channelCategories: 'ChannelCategoryConnection'
     id: 'ID'
     logo: 'Media'
+    serverUsers: 'UsersOnServersConnection'
     title: 'String'
   }
   ServerCreatePayload: { // field return type name
@@ -556,6 +561,11 @@ export interface NexusGenArgTypes {
   Server: {
     channelCategories: { // args
       after?: string | null; // String
+      first: number; // Int!
+    }
+    serverUsers: { // args
+      after?: string | null; // String
+      filters?: NexusGenInputs['ServerUsersConnectionFilters'] | null; // ServerUsersConnectionFilters
       first: number; // Int!
     }
   }
