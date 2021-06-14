@@ -1,4 +1,5 @@
 export * from './MutationServerCreate'
+export * from './MutationServerInvite'
 
 import { connectionFromPromisedArray } from "graphql-relay";
 import { enumType, extendType, inputObjectType, objectType } from "nexus";

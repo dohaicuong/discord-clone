@@ -1,4 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
+import { SocketStream } from "fastify-websocket"
 import { PrismaClient } from '@prisma/client'
 import { PubSub } from 'mercurius'
 import * as cryptoService from './cryptoService'
@@ -25,6 +26,15 @@ export const context = async (request: FastifyRequest, reply: FastifyReply) => {
   return {
     prisma,
     userId: tokenPayload?.sub ?? null,
+    cryptoService,
+    jwtService,
+    fileService
+  }
+}
+
+export const subContext = async (connection: SocketStream, request: FastifyRequest) => {
+  return {
+    prisma,
     cryptoService,
     jwtService,
     fileService

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import StyledHeader from 'components/StyledHeader'
-import { Grid, makeStyles } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { Outlet } from 'react-router'
 
 const Me = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [, setAnchorEl] = useState<null | HTMLElement>(null) // anchorEl
   const handleClick = (event: React.MouseEvent<HTMLHeadingElement>) => setAnchorEl(event.currentTarget)
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+  // const handleClose = () => {
+  //   setAnchorEl(null)
+  // }
 
   return (
     <Grid container>
@@ -18,35 +18,9 @@ const Me = () => {
         </StyledHeader>
       </Grid>
       <Grid item xs style={{ background: '#36393f' }}>
-        <MessageList />
+        <Outlet />
       </Grid>
     </Grid>
   )
 }
 export default Me
-
-const MessageList = () => {
-  const classes = useStyles()
-
-  return (
-    <div className={classes.list}>
-      {Array(100).fill(1).map((_, i) => (
-        <div key={i} style={{ transform: 'rotateX(180deg)' }}>
-          message {i}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-const useStyles = makeStyles({
-  list: {
-    width: '100%',
-    height: '100vh',
-    overflowY: 'auto',
-    transform: 'rotateX(180deg)',
-    '&::-webkit-scrollbar': {
-      transform: 'rotateX(180deg)'
-    }
-  }
-})

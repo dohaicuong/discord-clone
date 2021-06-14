@@ -73,10 +73,17 @@ export interface NexusGenInputs {
     channelId: NexusGenScalars['RelayId']; // RelayId!
     content: string; // String!
   }
+  MessageCreateSubscriptionFilters: { // input type
+    channelId?: NexusGenScalars['RelayId'] | null; // RelayId
+  }
   ServerCreateInput: { // input type
     logo?: NexusGenScalars['Upload'] | null; // Upload
     nickname?: string | null; // String
     title: string; // String!
+  }
+  ServerInviteUserInput: { // input type
+    serverId: NexusGenScalars['RelayId']; // RelayId!
+    userId: NexusGenScalars['RelayId']; // RelayId!
   }
   ServerUsersConnectionFilters: { // input type
     currentUser?: boolean | null; // Boolean
@@ -160,6 +167,9 @@ export interface NexusGenObjects {
   MessageCreatePayload: { // root type
     message: NexusGenRootTypes['Message']; // Message!
   }
+  MessageCreateSubscriptionPayload: { // root type
+    message: NexusGenRootTypes['Message']; // Message!
+  }
   MessageEdge: { // root type
     cursor: string; // String!
     node: NexusGenRootTypes['Message']; // Message!
@@ -178,6 +188,9 @@ export interface NexusGenObjects {
   }
   ServerCreatePayload: { // root type
     server?: NexusGenRootTypes['Server'] | null; // Server
+    userServer?: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
+  }
+  ServerInviteUserPayload: { // root type
     userServer?: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
   }
   SignupMutationPayload: { // root type
@@ -285,6 +298,9 @@ export interface NexusGenFieldTypes {
   MessageCreatePayload: { // field return type
     message: NexusGenRootTypes['Message']; // Message!
   }
+  MessageCreateSubscriptionPayload: { // field return type
+    message: NexusGenRootTypes['Message']; // Message!
+  }
   MessageEdge: { // field return type
     cursor: string; // String!
     node: NexusGenRootTypes['Message']; // Message!
@@ -297,6 +313,7 @@ export interface NexusGenFieldTypes {
     login: NexusGenRootTypes['LoginMutationPayload']; // LoginMutationPayload!
     messageCreate: NexusGenRootTypes['MessageCreatePayload'] | null; // MessageCreatePayload
     serverCreate: NexusGenRootTypes['ServerCreatePayload']; // ServerCreatePayload!
+    serverInviteUser: NexusGenRootTypes['ServerInviteUserPayload']; // ServerInviteUserPayload!
     signup: NexusGenRootTypes['SignupMutationPayload']; // SignupMutationPayload!
   }
   PageInfo: { // field return type
@@ -322,12 +339,15 @@ export interface NexusGenFieldTypes {
     server: NexusGenRootTypes['Server'] | null; // Server
     userServer: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
   }
+  ServerInviteUserPayload: { // field return type
+    userServer: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
+  }
   SignupMutationPayload: { // field return type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
   Subscription: { // field return type
-    messageCreated: NexusGenRootTypes['Message'] | null; // Message
+    messageCreated: NexusGenRootTypes['MessageCreateSubscriptionPayload'] | null; // MessageCreateSubscriptionPayload
   }
   User: { // field return type
     avatar: NexusGenScalars['Media'] | null; // Media
@@ -427,6 +447,9 @@ export interface NexusGenFieldTypeNames {
   MessageCreatePayload: { // field return type name
     message: 'Message'
   }
+  MessageCreateSubscriptionPayload: { // field return type name
+    message: 'Message'
+  }
   MessageEdge: { // field return type name
     cursor: 'String'
     node: 'Message'
@@ -439,6 +462,7 @@ export interface NexusGenFieldTypeNames {
     login: 'LoginMutationPayload'
     messageCreate: 'MessageCreatePayload'
     serverCreate: 'ServerCreatePayload'
+    serverInviteUser: 'ServerInviteUserPayload'
     signup: 'SignupMutationPayload'
   }
   PageInfo: { // field return type name
@@ -464,12 +488,15 @@ export interface NexusGenFieldTypeNames {
     server: 'Server'
     userServer: 'UsersOnServers'
   }
+  ServerInviteUserPayload: { // field return type name
+    userServer: 'UsersOnServers'
+  }
   SignupMutationPayload: { // field return type name
     token: 'String'
     user: 'User'
   }
   Subscription: { // field return type name
-    messageCreated: 'Message'
+    messageCreated: 'MessageCreateSubscriptionPayload'
   }
   User: { // field return type name
     avatar: 'Media'
@@ -510,8 +537,8 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Channel: {
     messages: { // args
-      after?: string | null; // String
-      first: number; // Int!
+      before?: string | null; // String
+      last: number; // Int!
     }
   }
   ChannelCategory: {
@@ -542,6 +569,9 @@ export interface NexusGenArgTypes {
     serverCreate: { // args
       input: NexusGenInputs['ServerCreateInput']; // ServerCreateInput!
     }
+    serverInviteUser: { // args
+      input: NexusGenInputs['ServerInviteUserInput']; // ServerInviteUserInput!
+    }
     signup: { // args
       input: NexusGenInputs['SignupMutationInput']; // SignupMutationInput!
     }
@@ -567,6 +597,11 @@ export interface NexusGenArgTypes {
       after?: string | null; // String
       filters?: NexusGenInputs['ServerUsersConnectionFilters'] | null; // ServerUsersConnectionFilters
       first: number; // Int!
+    }
+  }
+  Subscription: {
+    messageCreated: { // args
+      filters?: NexusGenInputs['MessageCreateSubscriptionFilters'] | null; // MessageCreateSubscriptionFilters
     }
   }
   User: {

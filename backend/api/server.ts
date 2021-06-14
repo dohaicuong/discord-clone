@@ -6,13 +6,15 @@ server.register(MercuriusGQLUpload, {})
 
 import mercurius from 'mercurius'
 import { schema } from './schema'
-import { context } from './context'
+import { context, subContext } from './context'
 server.register(mercurius, {
   schema,
   context,
   graphiql: 'playground',
   allowBatchedQueries: true,
-  subscription: true,
+  subscription: {
+    context: subContext
+  },
 })
 
 import altairFastify from 'altair-fastify-plugin'

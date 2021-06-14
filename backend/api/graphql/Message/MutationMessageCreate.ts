@@ -27,6 +27,7 @@ export const MessageCreateMutation = extendType({
           .channelCategory()
           .server()
           .serverUsers({ where: { userId: ctx.userId } })
+          .then(users => Boolean(users.length))
         if(!isInServer) throw new Error('Unauthorized')
 
         const message = await ctx.prisma.message.create({
@@ -39,6 +40,8 @@ export const MessageCreateMutation = extendType({
         ctx.pubsub.publish({
           topic: 'MESSAGE_CREATED',
           payload: {
+            channelId: input.channelId,
+            authorId: ctx.userId,
             messageCreated: message
           }
         })

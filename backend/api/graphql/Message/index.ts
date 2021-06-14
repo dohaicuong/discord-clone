@@ -1,7 +1,7 @@
 export * from './MutationMessageCreate'
 export * from './SubscriptionMessageCreate'
 
-import { connectionFromPromisedArray } from "graphql-relay";
+import { connectionFromArray, connectionFromPromisedArray } from "graphql-relay";
 import { extendType, objectType } from "nexus";
 
 export const Message = objectType({
@@ -35,14 +35,17 @@ export const ChannelExtend = extendType({
   definition: t => {
     t.nonNull.connectionField('messages', {
       type: 'Message',
+      disableForwardPagination: true,
+      disableBackwardPagination: false,
       // @ts-ignore
-      resolve: (channel, args, ctx) => {
-        return connectionFromPromisedArray(
-          ctx.prisma.channel
-            .findUnique({ where: { id: (channel as any).id }})
-            .mesasges(),
-          args
-        )
+      resolve: async (channel, args, ctx) => {
+        const channels = await ctx.prisma.channel
+          .findUnique({ where: { id: (channel as any).id }})
+          .mesasges({ orderBy: { createdAt: 'desc' }})
+        const connection = connectionFromArray(channels.reverse(), args)
+        connection.edges = connection.edges
+
+        return connection
       }
     })
   }

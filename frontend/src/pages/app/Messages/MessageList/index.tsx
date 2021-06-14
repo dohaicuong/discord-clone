@@ -1,12 +1,11 @@
 import { makeStyles } from "@material-ui/core"
 import { graphql } from "babel-plugin-relay/macro"
-import { usePaginationFragment } from "react-relay"
+import { usePaginationFragment, useSubscription } from "react-relay"
 import { MessageListPaginationQuery } from "./__generated__/MessageListPaginationQuery.graphql"
 import { MessageList_messages$key } from "./__generated__/MessageList_messages.graphql"
 import MessageGroup, { MessageGroupType } from './MessageGroup'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
-
-// import InfiniteScroll from 'react-infinite-scroll-component'
+import { useParams } from "react-router-dom"
 
 type MessageListProps = {
   channel: MessageList_messages$key
@@ -47,6 +46,17 @@ const MessageList: React.FC<MessageListProps> = props => {
     props.channel
   )
 
+  const { channelId } = useParams()
+  useSubscription({
+    subscription,
+    variables: {
+      channelId,
+      connections: [
+        `client:${channelId}:__MessageList_messages_connection`,
+      ]
+    },
+  })
+
   const [sentryRef, { rootRef }] = useInfiniteScroll({
     loading: isLoadingPrevious,
     hasNextPage: hasPrevious,
@@ -55,23 +65,7 @@ const MessageList: React.FC<MessageListProps> = props => {
     rootMargin: '0px 0px 400px 0px',
   })
 
-  const messageGroups = data.messages.edges.reduce<MessageGroupType[]>((total, { node: message }) => {
-    const lastGroup = total[total.length - 1]
-    if(lastGroup?.author?.id === message.author?.id) {
-      lastGroup.messages.push(message.content)
-    }
-    else {
-      total.push({
-        author: message.author,
-        createdAt: message.createdAt,
-        messages: [
-          message.content
-        ]
-      })
-    }
-
-    return total
-  }, [])
+  const messageGroups = mapMessageGroup(data.messages.edges)
 
   return (
     <div className={classes.list} ref={rootRef}>
@@ -96,8 +90,57 @@ const useStyles = makeStyles({
     height: '100%',
     overflowY: 'auto',
     transform: 'rotateX(180deg)',
+    padding: '30px 0'
   },
   item: {
     transform: 'rotateX(180deg)',
   }
 })
+
+const mapMessageGroup = (messages: any): MessageGroupType[] => {
+  // @ts-ignore
+  return messages.reduce<MessageGroupType[]>((total, { node: message }) => {
+    const lastGroup = total[total.length - 1]
+    if(lastGroup?.author?.id === message.author?.id) {
+      lastGroup.messages.push(message.content)
+    }
+    else {
+      total.push({
+        author: message.author,
+        createdAt: message.createdAt,
+        messages: [
+          message.content
+        ]
+      })
+    }
+
+    return total
+  }, [])
+}
+
+const subscription = graphql`
+  subscription MessageListSubscription(
+    $channelId: RelayId
+    $connections: [ID!]!
+  )
+  {
+    messageCreated (filters: { channelId: $channelId })
+    {
+      message
+      @appendNode(
+        edgeTypeName: "Message"
+        connections: $connections
+      )
+      {
+        content
+        createdAt
+        author {
+          id
+          username
+          avatar
+          email
+        }
+      }
+    }
+  }
+`
