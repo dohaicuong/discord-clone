@@ -22,7 +22,7 @@ const ChannelCategory: React.FC<ChannelCategoryProps> = props => {
     props.channelCategory
   )
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const handleClick = () => setOpen(pre => !pre)
 
   return (
