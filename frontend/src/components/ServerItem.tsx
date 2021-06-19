@@ -2,7 +2,7 @@ import { ListItemIcon } from '@material-ui/core'
 import CircularButton from 'components/CircularButton'
 import StyledDivider from 'components/StyledDivider'
 import StyledBadge from 'components/StyledBadge'
-import ServerListItem from '../ServerListItem'
+import ServerListItem from './ServerListItem'
 import DiscordLogo from 'resources/DiscordLogo'
 
 export type ServerItemProps = {

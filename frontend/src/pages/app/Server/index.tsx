@@ -19,18 +19,21 @@ const Server = () => {
           ...ServerFooter_server
           ...ServerChannelCategoryList_server
         }
+        me {
+          ...ServerHeader_me
+        }
       }
     `,
     { serverId }
   )
     
-  if(!data.server) return <>Server is down!</>
+  if(!data.server || !data.me) return <>Server is down!</>
 
   return (
     <Grid container>
       <Grid item container direction='column' style={{ position: 'relative', width: 240, height: '100vh' }}>
         <Grid item>
-          <ServerHeader server={data.server} />
+          <ServerHeader me={data.me} server={data.server} />
         </Grid>
         <Grid item xs style={{ overflow: 'auto' }}>
           <ServerChannelCategoryList server={data.server} />

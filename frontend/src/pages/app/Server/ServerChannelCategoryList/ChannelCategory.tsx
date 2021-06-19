@@ -6,6 +6,7 @@ import { Add, ChevronRight, KeyboardArrowDown, } from '@material-ui/icons'
 import { cloneElement, useState } from "react"
 import { ChannelCategory_channelCategory$key } from "./__generated__/ChannelCategory_channelCategory.graphql"
 import ServerChannelList from '../ServerChannelList'
+import ActionAddChannelDialog from '../ActionAddChannelDialog'
 
 type ChannelCategoryProps = {
   channelCategory: ChannelCategory_channelCategory$key
@@ -17,24 +18,38 @@ const ChannelCategory: React.FC<ChannelCategoryProps> = props => {
         id
         name
         ...ServerChannelList_channelCategory
+        ...ActionAddChannelDialog_channelCategory
       }
     `,
     props.channelCategory
   )
 
-  const [open, setOpen] = useState(true)
-  const handleClick = () => setOpen(pre => !pre)
-
+  const [menuOpen, setMenuOpen] = useState(true)
+  const handleClick = () => setMenuOpen(pre => !pre)
+    
+  const [addChannelOpen, setAddChannelOpen] = useState(false)
+  const handleAddChannelOpen = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.stopPropagation()
+    setAddChannelOpen(true)
+  }
+  const handleAddChannelClose = () => setAddChannelOpen(false)
+  
   return (
     <>
       <MuiList disablePadding style={{ marginTop: 16, height: 24 }}>
         <ListHeaderItem button onClick={handleClick}>
-          <ListHeaderIcon on={open} onIcon={<KeyboardArrowDown />} offIcon={<ChevronRight />} />
+          <ListHeaderIcon on={menuOpen} onIcon={<KeyboardArrowDown />} offIcon={<ChevronRight />} />
           <ListHeaderText primary={channelCategory.name} />
-          <Add style={{ width: 18, height: 18 }} />
+          
+          <Add style={{ width: 18, height: 18 }} onClick={handleAddChannelOpen} />
+          <ActionAddChannelDialog
+            channelCategory={channelCategory}
+            open={addChannelOpen}
+            handleClose={handleAddChannelClose}
+          />
         </ListHeaderItem>
       </MuiList>
-      <Collapse in={open} timeout='auto' unmountOnExit>
+      <Collapse in={menuOpen} timeout='auto' unmountOnExit>
         <ServerChannelList channelCategory={channelCategory} />
       </Collapse>
     </>

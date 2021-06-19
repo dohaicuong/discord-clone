@@ -19,6 +19,8 @@ const Auth = lazy(() => import(/* webpackChunkName: 'Auth' */ 'pages/auth'))
 const Login = lazy(() => import(/* webpackChunkName: 'Login' */ 'pages/auth/login'))
 const Signup = lazy(() => import(/* webpackChunkName: 'Signup' */ 'pages/auth/signup'))
 
+const InviteUser = lazy(() => import(/* webpackChunkName: 'InviteUser' */ 'pages/invite'))
+
 const NotFound = lazy(() => import(/* webpackChunkName: 'NotFound' */ 'pages/notfound'))
 
 const AppRoot = () => {
@@ -39,6 +41,7 @@ const AppRoot = () => {
                 <SuspenseRoute path='login' element={<Login />}/>
                 <SuspenseRoute path='signup' element={<Signup />}/>
               </SuspenseRoute>
+              <SuspenseRoute path='invite/:serverId/:hostId' element={<InviteUser />} />
               <SuspenseRoute path='*' element={<NotFound />} />
             </Routes>
           </Router>

@@ -85,6 +85,9 @@ export interface NexusGenInputs {
     serverId: NexusGenScalars['RelayId']; // RelayId!
     userId: NexusGenScalars['RelayId']; // RelayId!
   }
+  ServerJoinInput: { // input type
+    serverId: NexusGenScalars['RelayId']; // RelayId!
+  }
   ServerUsersConnectionFilters: { // input type
     currentUser?: boolean | null; // Boolean
   }
@@ -119,7 +122,6 @@ export interface NexusGenObjects {
   }
   ChannelCategory: { // root type
     name: string; // String!
-    server?: NexusGenRootTypes['Server'] | null; // Server
   }
   ChannelCategoryConnection: { // root type
     edges: NexusGenRootTypes['ChannelCategoryEdge'][]; // [ChannelCategoryEdge!]!
@@ -192,6 +194,13 @@ export interface NexusGenObjects {
   }
   ServerInviteUserPayload: { // root type
     userServer?: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
+  }
+  ServerJoinPayload: { // root type
+    userServer?: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
+  }
+  ServerServerUsers_Connection: { // root type
+    edges: NexusGenRootTypes['UsersOnServersEdge'][]; // [UsersOnServersEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
   SignupMutationPayload: { // root type
     token: string; // String!
@@ -314,6 +323,7 @@ export interface NexusGenFieldTypes {
     messageCreate: NexusGenRootTypes['MessageCreatePayload'] | null; // MessageCreatePayload
     serverCreate: NexusGenRootTypes['ServerCreatePayload']; // ServerCreatePayload!
     serverInviteUser: NexusGenRootTypes['ServerInviteUserPayload']; // ServerInviteUserPayload!
+    serverJoinUser: NexusGenRootTypes['ServerJoinPayload']; // ServerJoinPayload!
     signup: NexusGenRootTypes['SignupMutationPayload']; // SignupMutationPayload!
   }
   PageInfo: { // field return type
@@ -332,7 +342,7 @@ export interface NexusGenFieldTypes {
     channelCategories: NexusGenRootTypes['ChannelCategoryConnection']; // ChannelCategoryConnection!
     id: string; // ID!
     logo: NexusGenScalars['Media'] | null; // Media
-    serverUsers: NexusGenRootTypes['UsersOnServersConnection']; // UsersOnServersConnection!
+    serverUsers: NexusGenRootTypes['ServerServerUsers_Connection']; // ServerServerUsers_Connection!
     title: string; // String!
   }
   ServerCreatePayload: { // field return type
@@ -341,6 +351,14 @@ export interface NexusGenFieldTypes {
   }
   ServerInviteUserPayload: { // field return type
     userServer: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
+  }
+  ServerJoinPayload: { // field return type
+    userServer: NexusGenRootTypes['UsersOnServers'] | null; // UsersOnServers
+  }
+  ServerServerUsers_Connection: { // field return type
+    edges: NexusGenRootTypes['UsersOnServersEdge'][]; // [UsersOnServersEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+    totalCount: number; // Int!
   }
   SignupMutationPayload: { // field return type
     token: string; // String!
@@ -463,6 +481,7 @@ export interface NexusGenFieldTypeNames {
     messageCreate: 'MessageCreatePayload'
     serverCreate: 'ServerCreatePayload'
     serverInviteUser: 'ServerInviteUserPayload'
+    serverJoinUser: 'ServerJoinPayload'
     signup: 'SignupMutationPayload'
   }
   PageInfo: { // field return type name
@@ -481,7 +500,7 @@ export interface NexusGenFieldTypeNames {
     channelCategories: 'ChannelCategoryConnection'
     id: 'ID'
     logo: 'Media'
-    serverUsers: 'UsersOnServersConnection'
+    serverUsers: 'ServerServerUsers_Connection'
     title: 'String'
   }
   ServerCreatePayload: { // field return type name
@@ -490,6 +509,14 @@ export interface NexusGenFieldTypeNames {
   }
   ServerInviteUserPayload: { // field return type name
     userServer: 'UsersOnServers'
+  }
+  ServerJoinPayload: { // field return type name
+    userServer: 'UsersOnServers'
+  }
+  ServerServerUsers_Connection: { // field return type name
+    edges: 'UsersOnServersEdge'
+    pageInfo: 'PageInfo'
+    totalCount: 'Int'
   }
   SignupMutationPayload: { // field return type name
     token: 'String'
@@ -571,6 +598,9 @@ export interface NexusGenArgTypes {
     }
     serverInviteUser: { // args
       input: NexusGenInputs['ServerInviteUserInput']; // ServerInviteUserInput!
+    }
+    serverJoinUser: { // args
+      input: NexusGenInputs['ServerJoinInput']; // ServerJoinInput!
     }
     signup: { // args
       input: NexusGenInputs['SignupMutationInput']; // SignupMutationInput!

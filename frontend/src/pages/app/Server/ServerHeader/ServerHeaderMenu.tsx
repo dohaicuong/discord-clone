@@ -1,14 +1,41 @@
-import { Divider, Grow, ListItemSecondaryAction, makeStyles, withStyles } from '@material-ui/core'
-import { PersonAdd, Settings, Notifications, VerifiedUser, Edit, CheckBoxOutlineBlank, ExitToApp } from '@material-ui/icons'
+import { Divider, Grow, makeStyles, withStyles } from '@material-ui/core'
+import { Settings, Notifications, VerifiedUser, Edit, CheckBoxOutlineBlank, ExitToApp } from '@material-ui/icons'
 import StyledMenu from 'components/StyledMenu'
 import StyledMenuItem from 'components/StyledMenuItem'
+import StyledMenuItemAction from './StyledMenuItemAction'
+
+import InvitePeopleAction from './InvitePeopleAction'
+import { useFragment } from 'react-relay'
+import { graphql } from 'babel-plugin-relay/macro'
+import { ServerHeaderMenu_server$key } from './__generated__/ServerHeaderMenu_server.graphql'
+import { ServerHeaderMenu_me$key } from './__generated__/ServerHeaderMenu_me.graphql'
 
 type ServerHeaderMenuProps = {
   anchorEl: HTMLElement | null
   onClose: () => void
+  me: ServerHeaderMenu_me$key
+  server: ServerHeaderMenu_server$key
 }
-const ServerHeaderMenu: React.FC<ServerHeaderMenuProps> = ({ anchorEl, onClose }) => {
+const ServerHeaderMenu: React.FC<ServerHeaderMenuProps> = ({ anchorEl, onClose, ...props }) => {
   const classes = useStyles()
+
+  const me = useFragment(
+    graphql`
+      fragment ServerHeaderMenu_me on User {
+        ...InvitePeopleAction_me
+      }
+    `,
+    props.me
+  )
+
+  const server = useFragment(
+    graphql`
+      fragment ServerHeaderMenu_server on Server {
+        ...InvitePeopleAction_server
+      }
+    `,
+    props.server
+  )
   
   return (
     <StyledMenu
@@ -30,12 +57,11 @@ const ServerHeaderMenu: React.FC<ServerHeaderMenuProps> = ({ anchorEl, onClose }
       </StyledMenuItem>
       <StyledDivider />
 
-      <StyledMenuItem onClick={onClose} className={classes.inviteMenu}>
-        Invite People
-        <StyledMenuItemAction>
-          <PersonAdd className={classes.menuIcon} />
-        </StyledMenuItemAction>
-      </StyledMenuItem>
+      <InvitePeopleAction
+        me={me}
+        server={server}
+        handleCloseMenu={onClose}
+      />
       <StyledMenuItem onClick={onClose}>
         Server Settings
         <StyledMenuItemAction>
@@ -95,14 +121,6 @@ const useStyles = makeStyles(theme => ({
     width: 18,
     height: 18,
   },
-  inviteMenu: {
-    color: theme.palette.primary.main,
-    '& + div': { color: theme.palette.primary.main },
-    '&:hover': {
-      backgroundColor: `${theme.palette.primary.main} !important`,
-    },
-    '&:hover + div': { color: '#fff' },
-  },
   leaveMenu: {
     color: theme.palette.error.main,
     '& + div': { color: theme.palette.error.main },
@@ -113,12 +131,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const StyledMenuItemAction = withStyles({
-  root: {
-    display: 'flex',
-    right: 8
-  }
-})(ListItemSecondaryAction)
+
 
 const StyledDivider = withStyles({
   root: {

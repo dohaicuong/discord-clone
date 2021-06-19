@@ -1,6 +1,6 @@
 import { graphql } from "babel-plugin-relay/macro"
 import { useFragment } from "react-relay"
-import ServerItem, { ServerItemProps } from "./ServerItem"
+import ServerItem, { ServerItemProps } from "components/ServerItem"
 import { ServerFragment_server$key } from "./__generated__/ServerFragment_server.graphql"
 
 type ServerProps = Omit<ServerItemProps, 'id' | 'title'> & {

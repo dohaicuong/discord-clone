@@ -4,7 +4,7 @@ import { useServerId } from './useServerId'
 import { useKickUser } from './useKickUser'
 
 import { Grid, List } from '@material-ui/core'
-import ServerItem from './Server/ServerItem'
+import ServerItem from 'components/ServerItem'
 import DiscordLogo from 'resources/DiscordLogo'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'babel-plugin-relay/macro'

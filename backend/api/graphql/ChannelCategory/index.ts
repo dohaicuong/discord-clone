@@ -8,7 +8,16 @@ export const ChannelCategory = objectType({
   definition: t => {
     t.implements('Node')
     t.nonNull.string('name')
-    t.field('server', { type: 'Server' })
+    t.field('server', {
+      type: 'Server',
+      resolve: (channelCategory, _args, ctx) => {
+        return ctx.prisma.channelCategory.findUnique({
+          where: {
+            id: (channelCategory as any).id
+          }
+        }).server()
+      }
+    })
   }
 })
 

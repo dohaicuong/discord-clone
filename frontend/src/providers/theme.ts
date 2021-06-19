@@ -33,7 +33,7 @@ export default createMuiTheme({
     },
     MuiPaper: {
       root: {
-        backgroundColor: '#18191c',
+        backgroundColor: '#36393f',
         // boxShadow: '0 8px 16px rgba(0,0,0,0.24)',
         boxShadow: 'none',
         borderRadius: 4,

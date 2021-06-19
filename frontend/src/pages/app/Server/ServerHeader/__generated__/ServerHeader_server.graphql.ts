@@ -6,6 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ServerHeader_server = {
     readonly title: string;
+    readonly " $fragmentRefs": FragmentRefs<"ServerHeaderMenu_server">;
     readonly " $refType": "ServerHeader_server";
 };
 export type ServerHeader_server$data = ServerHeader_server;
@@ -28,10 +29,15 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "title",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ServerHeaderMenu_server"
     }
   ],
   "type": "Server",
   "abstractKey": null
 };
-(node as any).hash = '463b037968356d6e521c460378efa2cc';
+(node as any).hash = '92156791b4c4b1581c46a0c3f654465e';
 export default node;

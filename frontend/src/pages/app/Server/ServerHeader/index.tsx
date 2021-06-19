@@ -7,8 +7,10 @@ import BootIcon from 'resources/BootIcon'
 import { useState } from "react"
 import { ServerHeader_server$key } from "./__generated__/ServerHeader_server.graphql"
 import ServerHeaderMenu from "./ServerHeaderMenu"
+import { ServerHeader_me$key } from "./__generated__/ServerHeader_me.graphql"
 
 type ServerHeaderProps = {
+  me: ServerHeader_me$key
   server: ServerHeader_server$key
 }
 const ServerHeader: React.FC<ServerHeaderProps> = props => {
@@ -18,10 +20,20 @@ const ServerHeader: React.FC<ServerHeaderProps> = props => {
     setAnchorEl(null)
   }
 
+  const me = useFragment(
+    graphql`
+      fragment ServerHeader_me on User {
+        ...ServerHeaderMenu_me
+      }
+    `,
+    props.me
+  )
+
   const server = useFragment(
     graphql`
       fragment ServerHeader_server on Server {
         title
+        ...ServerHeaderMenu_server
       }
     `,
     props.server
@@ -49,7 +61,12 @@ const ServerHeader: React.FC<ServerHeaderProps> = props => {
           </Grid>
         </Grid>
       </StyledHeader>
-      <ServerHeaderMenu anchorEl={anchorEl} onClose={handleClose} />
+      <ServerHeaderMenu
+        me={me}
+        server={server}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+      />
     </>
   )
 }

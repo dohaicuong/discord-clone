@@ -5,14 +5,10 @@ const StyledTextField = withStyles(theme => ({
     'label + &': {
       position: 'relative',
       marginTop: theme.spacing(3),
-    }
-  },
-  input: {
+    },
     borderRadius: 3,
     backgroundColor: '#303338',
     color: '#dcddde',
-    padding: 10,
-    height: 20,
     transition: 'border-color .2s ease-in-out',
     border: '1px solid',
     borderColor: 'rgba(0,0,0,0.3)',
@@ -22,6 +18,10 @@ const StyledTextField = withStyles(theme => ({
     '&:focus': {
       borderColor: '#7289da',
     },
+  },
+  input: {
+    padding: 14,
+    height: 20,
     // '&:-webkit-autofill': {
     //   '-webkit-box-shadow': '0 0 0 40px #303338 inset !important',
     //   '-webkit-text-fill-color': '#dcddde !important',

@@ -1,5 +1,6 @@
 export * from './MutationServerCreate'
 export * from './MutationServerInvite'
+export * from './MutationServerJoin'
 
 import { connectionFromPromisedArray } from "graphql-relay";
 import { enumType, extendType, inputObjectType, objectType } from "nexus";
@@ -23,6 +24,8 @@ export const Server = objectType({
       },
       // @ts-ignore
       resolve: (server, { filters, ...args }, ctx) => {
+        (ctx as any).serverId = (server as any).id
+
         return connectionFromPromisedArray(
           ctx.prisma.server
             .findUnique({ where: { id: (server as any).id }})
@@ -33,6 +36,22 @@ export const Server = objectType({
             }),
           args
         )
+      },
+      extendConnection: t => {
+        t.int('totalCount', {
+          resolve: async (connection, args, ctx) => {
+            const { serverId } = ctx as any
+            const serverUsers = await ctx.prisma.usersOnServers.aggregate({
+              count: {
+                id: true
+              },
+              where: {
+                serverId,
+              },
+            })
+            return serverUsers.count.id
+          }
+        })
       }
     })
   }

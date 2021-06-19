@@ -1,6 +1,6 @@
 import { Add } from '@material-ui/icons'
 import { useState } from 'react'
-import ServerItem from '../Server/ServerItem'
+import ServerItem from 'components/ServerItem'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Dialog, Typography } from '@material-ui/core'
 import StyledDialogTitle from 'components/StyledDialogTitle'

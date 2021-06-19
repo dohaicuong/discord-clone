@@ -184,6 +184,7 @@ type Mutation {
 
   """Server Owner invite user"""
   serverInviteUser(input: ServerInviteUserInput!): ServerInviteUserPayload!
+  serverJoinUser(input: ServerJoinInput!): ServerJoinPayload!
   signup(input: SignupMutationInput!): SignupMutationPayload!
 }
 
@@ -251,7 +252,7 @@ type Server implements Node {
 
     """Returns the first n elements from the list."""
     first: Int!
-  ): UsersOnServersConnection!
+  ): ServerServerUsers_Connection!
   title: String!
 }
 
@@ -273,6 +274,27 @@ input ServerInviteUserInput {
 
 type ServerInviteUserPayload {
   userServer: UsersOnServers
+}
+
+input ServerJoinInput {
+  serverId: RelayId!
+}
+
+type ServerJoinPayload {
+  userServer: UsersOnServers
+}
+
+type ServerServerUsers_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [UsersOnServersEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input ServerUsersConnectionFilters {

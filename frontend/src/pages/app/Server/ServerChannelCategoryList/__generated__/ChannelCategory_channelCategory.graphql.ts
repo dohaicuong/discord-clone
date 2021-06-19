@@ -7,7 +7,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ChannelCategory_channelCategory = {
     readonly id: string;
     readonly name: string;
-    readonly " $fragmentRefs": FragmentRefs<"ServerChannelList_channelCategory">;
+    readonly " $fragmentRefs": FragmentRefs<"ServerChannelList_channelCategory" | "ActionAddChannelDialog_channelCategory">;
     readonly " $refType": "ChannelCategory_channelCategory";
 };
 export type ChannelCategory_channelCategory$data = ChannelCategory_channelCategory;
@@ -42,10 +42,15 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ServerChannelList_channelCategory"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ActionAddChannelDialog_channelCategory"
     }
   ],
   "type": "ChannelCategory",
   "abstractKey": null
 };
-(node as any).hash = 'f18611a3fb9d1b00844b7921220eba9f';
+(node as any).hash = '2db24a1b26f015700672ac8840b80806';
 export default node;

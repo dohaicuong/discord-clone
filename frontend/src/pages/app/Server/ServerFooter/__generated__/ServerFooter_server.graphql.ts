@@ -48,7 +48,7 @@ const node: ReaderFragment = {
           "value": 1
         }
       ],
-      "concreteType": "UsersOnServersConnection",
+      "concreteType": "ServerServerUsers_Connection",
       "kind": "LinkedField",
       "name": "serverUsers",
       "plural": false,
