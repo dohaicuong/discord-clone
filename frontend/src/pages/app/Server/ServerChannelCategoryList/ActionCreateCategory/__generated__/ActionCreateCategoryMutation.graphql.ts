@@ -72,6 +72,7 @@ fragment ServerChannelList_channelCategory on ChannelCategory {
 fragment ServerChannel_channel on Channel {
   id
   name
+  channelType
 }
 */
 
@@ -213,6 +214,13 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
+                            "name": "channelType",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
                             "name": "__typename",
                             "storageKey": null
                           }
@@ -296,12 +304,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c1e1e195068cb85ff93d92f7a7d2d751",
+    "cacheID": "36b815ca0695fc949b6206a98dae3243",
     "id": null,
     "metadata": {},
     "name": "ActionCreateCategoryMutation",
     "operationKind": "mutation",
-    "text": "mutation ActionCreateCategoryMutation(\n  $input: ChannelCategoryCreateInput!\n) {\n  channelCategoryCreate(input: $input) {\n    channelCategory {\n      id\n      ...ChannelCategory_channelCategory\n    }\n  }\n}\n\nfragment ActionAddChannelDialog_channelCategory on ChannelCategory {\n  id\n  name\n}\n\nfragment ChannelCategory_channelCategory on ChannelCategory {\n  id\n  name\n  ...ServerChannelList_channelCategory\n  ...ActionAddChannelDialog_channelCategory\n}\n\nfragment ServerChannelList_channelCategory on ChannelCategory {\n  channels(first: 10) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n}\n"
+    "text": "mutation ActionCreateCategoryMutation(\n  $input: ChannelCategoryCreateInput!\n) {\n  channelCategoryCreate(input: $input) {\n    channelCategory {\n      id\n      ...ChannelCategory_channelCategory\n    }\n  }\n}\n\nfragment ActionAddChannelDialog_channelCategory on ChannelCategory {\n  id\n  name\n}\n\nfragment ChannelCategory_channelCategory on ChannelCategory {\n  id\n  name\n  ...ServerChannelList_channelCategory\n  ...ActionAddChannelDialog_channelCategory\n}\n\nfragment ServerChannelList_channelCategory on ChannelCategory {\n  channels(first: 10) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n  channelType\n}\n"
   }
 };
 })();

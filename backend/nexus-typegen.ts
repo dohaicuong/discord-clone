@@ -57,6 +57,7 @@ export interface NexusGenInputs {
   }
   ChannelCreateInput: { // input type
     channelCategoryId: NexusGenScalars['RelayId']; // RelayId!
+    channelType?: NexusGenEnums['ChannelType'] | null; // ChannelType
     name: string; // String!
   }
   FriendAddInput: { // input type
@@ -100,6 +101,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  ChannelType: "TEXT" | "VOICE"
   UserRole: "OTHER" | "SERVER_BOOSTER" | "SERVER_OWNER"
 }
 
@@ -118,6 +120,7 @@ export interface NexusGenScalars {
 export interface NexusGenObjects {
   Channel: { // root type
     channelCategory?: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
+    channelType: NexusGenEnums['ChannelType']; // ChannelType!
     name: string; // String!
   }
   ChannelCategory: { // root type
@@ -248,6 +251,7 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnu
 export interface NexusGenFieldTypes {
   Channel: { // field return type
     channelCategory: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
+    channelType: NexusGenEnums['ChannelType']; // ChannelType!
     id: string; // ID!
     messages: NexusGenRootTypes['MessageConnection']; // MessageConnection!
     name: string; // String!
@@ -406,6 +410,7 @@ export interface NexusGenFieldTypes {
 export interface NexusGenFieldTypeNames {
   Channel: { // field return type name
     channelCategory: 'ChannelCategory'
+    channelType: 'ChannelType'
     id: 'ID'
     messages: 'MessageConnection'
     name: 'String'

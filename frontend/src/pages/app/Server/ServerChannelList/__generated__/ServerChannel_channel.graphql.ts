@@ -4,9 +4,11 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
+export type ChannelType = "TEXT" | "VOICE" | "%future added value";
 export type ServerChannel_channel = {
     readonly id: string;
     readonly name: string;
+    readonly channelType: ChannelType;
     readonly " $refType": "ServerChannel_channel";
 };
 export type ServerChannel_channel$data = ServerChannel_channel;
@@ -36,10 +38,17 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "name",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "channelType",
+      "storageKey": null
     }
   ],
   "type": "Channel",
   "abstractKey": null
 };
-(node as any).hash = 'ec0a92480afd58e0809b9bfbb5812b8c';
+(node as any).hash = '28594ffe6aa05ba3b79bb6646c251040';
 export default node;

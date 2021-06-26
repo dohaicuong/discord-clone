@@ -4,8 +4,10 @@
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
+export type ChannelType = "TEXT" | "VOICE" | "%future added value";
 export type ChannelCreateInput = {
     channelCategoryId: unknown;
+    channelType?: ChannelType | null;
     name: string;
 };
 export type ActionAddChannelDialogMutationVariables = {
@@ -41,6 +43,7 @@ mutation ActionAddChannelDialogMutation(
 fragment ServerChannel_channel on Channel {
   id
   name
+  channelType
 }
 */
 
@@ -141,6 +144,13 @@ return {
                 "kind": "ScalarField",
                 "name": "name",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "channelType",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -172,12 +182,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "addc87ece3e0ab31d69fba882d833321",
+    "cacheID": "e52a51b6062112bca1bddbb3b9d0c279",
     "id": null,
     "metadata": {},
     "name": "ActionAddChannelDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation ActionAddChannelDialogMutation(\n  $input: ChannelCreateInput!\n) {\n  channelCreate(input: $input) {\n    channel {\n      ...ServerChannel_channel\n      id\n    }\n  }\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n}\n"
+    "text": "mutation ActionAddChannelDialogMutation(\n  $input: ChannelCreateInput!\n) {\n  channelCreate(input: $input) {\n    channel {\n      ...ServerChannel_channel\n      id\n    }\n  }\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n  channelType\n}\n"
   }
 };
 })();

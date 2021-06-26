@@ -5,6 +5,7 @@ export const ChannelCreateInput = inputObjectType({
   definition: t => {
     t.nonNull.relayId('channelCategoryId')
     t.nonNull.string('name')
+    t.field('channelType', { type: 'ChannelType' })
   }
 })
 export const ChannelCreatePayload = objectType({
@@ -38,7 +39,8 @@ export const ChannelCreateMutation = extendType({
         const channel = await ctx.prisma.channel.create({
           data: {
             channelCategoryId: input.channelCategoryId,
-            name: input.name
+            name: input.name,
+            channelType: input.channelType || undefined
           }
         })
 

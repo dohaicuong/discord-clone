@@ -13,7 +13,7 @@ import SuspenseRoute from 'components/SuspenseRoute'
 const App = lazy(() => import(/* webpackChunkName: 'App' */ 'pages/app'))
 const Me = lazy(() => import(/* webpackChunkName: 'Me' */ 'pages/app/Me'))
 const Server = lazy(() => import(/* webpackChunkName: 'Server' */ 'pages/app/Server'))
-const Messages = lazy(() => import(/* webpackChunkName: 'Messages' */ 'pages/app/Messages'))
+const Channel = lazy(() => import(/* webpackChunkName: 'Channel' */ 'pages/app/Channel'))
 
 const Auth = lazy(() => import(/* webpackChunkName: 'Auth' */ 'pages/auth'))
 const Login = lazy(() => import(/* webpackChunkName: 'Login' */ 'pages/auth/login'))
@@ -34,7 +34,7 @@ const AppRoot = () => {
               <SuspenseRoute path='/' element={<App />}>
                 <SuspenseRoute path='@me' element={<Me />} />
                 <SuspenseRoute path=':serverId' element={<Server />}>
-                  <SuspenseRoute path=':channelId' element={<Messages />} />
+                  <SuspenseRoute path=':channelId' element={<Channel />} />
                 </SuspenseRoute>
               </SuspenseRoute>
               <SuspenseRoute path='auth' element={<Auth />}>

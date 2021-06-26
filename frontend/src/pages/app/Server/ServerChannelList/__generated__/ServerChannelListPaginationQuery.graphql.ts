@@ -55,6 +55,7 @@ fragment ServerChannelList_channelCategory_1G22uz on ChannelCategory {
 fragment ServerChannel_channel on Channel {
   id
   name
+  channelType
 }
 */
 
@@ -198,6 +199,13 @@ return {
                             "name": "name",
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "channelType",
+                            "storageKey": null
+                          },
                           (v2/*: any*/)
                         ],
                         "storageKey": null
@@ -259,12 +267,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8d704fecefd8364b9d4f2d1776b56746",
+    "cacheID": "2f94a3fb4e3b1476b1a2464c5118cbdb",
     "id": null,
     "metadata": {},
     "name": "ServerChannelListPaginationQuery",
     "operationKind": "query",
-    "text": "query ServerChannelListPaginationQuery(\n  $count: Int! = 10\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...ServerChannelList_channelCategory_1G22uz\n    id\n  }\n}\n\nfragment ServerChannelList_channelCategory_1G22uz on ChannelCategory {\n  channels(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n}\n"
+    "text": "query ServerChannelListPaginationQuery(\n  $count: Int! = 10\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...ServerChannelList_channelCategory_1G22uz\n    id\n  }\n}\n\nfragment ServerChannelList_channelCategory_1G22uz on ChannelCategory {\n  channels(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n  channelType\n}\n"
   }
 };
 })();

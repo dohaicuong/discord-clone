@@ -1,7 +1,7 @@
 import { FormControl, InputBaseProps } from '@material-ui/core'
 import { RegisterOptions, FieldValues, useFormContext, useFormState } from 'react-hook-form'
 
-import StyledInputLabel from './StyledInputLabel'
+import StyledInputLabel from 'components/StyledInputLabel'
 import StyledTextField from './StyledTextField'
 
 type InputTextFieldProps = InputBaseProps & {

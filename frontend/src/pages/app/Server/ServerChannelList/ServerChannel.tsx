@@ -3,8 +3,7 @@ import { graphql } from "babel-plugin-relay/macro"
 
 import React, { cloneElement } from "react"
 import { ListItem as MuiListItem, ListItemText as MuiListItemText, withStyles } from '@material-ui/core'
-// import { Book, VolumeUp } from '@material-ui/icons'
-import { Pound } from 'mdi-material-ui' // Bullhorn
+import { Pound, VolumeHigh } from 'mdi-material-ui'
 import { ServerChannel_channel$key } from "./__generated__/ServerChannel_channel.graphql"
 import { useNavigate, useMatch } from "react-router-dom"
 
@@ -20,6 +19,7 @@ const ServerChannel: React.FC<ServerChannelProps> = props => {
       fragment ServerChannel_channel on Channel {
         id
         name
+        channelType
       }
     `,
     props.channel
@@ -34,7 +34,11 @@ const ServerChannel: React.FC<ServerChannelProps> = props => {
     >
       {notice && <ListItemNotice />}
       <ListItemIcon>
-        <Pound />
+        {
+          channel.channelType === 'TEXT' ? <Pound /> :
+          channel.channelType === 'VOICE' ? <VolumeHigh /> :
+          null
+        }
       </ListItemIcon>
       <ListItemText primary={channel.name} />
     </ListItem>

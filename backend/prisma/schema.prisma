@@ -66,9 +66,15 @@ model ChannelCategory {
   channels Channel[]
 }
 
+enum ChannelType {
+  TEXT
+  VOICE
+}
+
 model Channel {
   id   String @id @default(cuid())
   name String
+  channelType ChannelType @default(TEXT)
 
   channelCategory   ChannelCategory? @relation(fields: [channelCategoryId], references: [id])
   channelCategoryId String?

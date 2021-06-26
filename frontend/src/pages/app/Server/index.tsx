@@ -26,7 +26,7 @@ const Server = () => {
     `,
     { serverId }
   )
-    
+
   if(!data.server || !data.me) return <>Server is down!</>
 
   return (

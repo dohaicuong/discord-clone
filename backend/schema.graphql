@@ -4,6 +4,7 @@
 
 type Channel implements Node {
   channelCategory: ChannelCategory
+  channelType: ChannelType!
 
   """Relay ID"""
   id: ID!
@@ -75,6 +76,7 @@ type ChannelConnection {
 
 input ChannelCreateInput {
   channelCategoryId: RelayId!
+  channelType: ChannelType
   name: String!
 }
 
@@ -88,6 +90,11 @@ type ChannelEdge {
 
   """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
   node: Channel!
+}
+
+enum ChannelType {
+  TEXT
+  VOICE
 }
 
 """

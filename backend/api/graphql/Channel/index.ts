@@ -1,13 +1,19 @@
 export * from './MutationChannelCreate'
 
 import { connectionFromPromisedArray } from 'graphql-relay'
-import { extendType, objectType } from 'nexus'
+import { extendType, objectType, enumType } from 'nexus'
+
+export const ChannelType = enumType({
+  name: 'ChannelType',
+  members: ['TEXT', 'VOICE'],
+})
 
 export const Channel = objectType({
   name: 'Channel',
   definition: t => {
     t.implements('Node')
     t.nonNull.string('name')
+    t.nonNull.field('channelType', { type: 'ChannelType' })
     t.field('channelCategory', { type: 'ChannelCategory' })
   }
 })

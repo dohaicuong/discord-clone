@@ -100,6 +100,7 @@ fragment ServerChannelList_channelCategory on ChannelCategory {
 fragment ServerChannel_channel on Channel {
   id
   name
+  channelType
 }
 
 fragment ServerFooter_server on Server {
@@ -415,6 +416,13 @@ return {
                                     "selections": [
                                       (v2/*: any*/),
                                       (v5/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "channelType",
+                                        "storageKey": null
+                                      },
                                       (v3/*: any*/)
                                     ],
                                     "storageKey": null
@@ -479,12 +487,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c3a57e73cf216e29133b7bb04fc04b17",
+    "cacheID": "c8d381d50213dd1dbd45e589675be95f",
     "id": null,
     "metadata": {},
     "name": "ServerQuery",
     "operationKind": "query",
-    "text": "query ServerQuery(\n  $serverId: ID!\n) {\n  server: node(id: $serverId) {\n    __typename\n    id\n    ...ServerHeader_server\n    ...ServerFooter_server\n    ...ServerChannelCategoryList_server\n  }\n  me {\n    ...ServerHeader_me\n    id\n  }\n}\n\nfragment ActionAddChannelDialog_channelCategory on ChannelCategory {\n  id\n  name\n}\n\nfragment ChannelCategory_channelCategory on ChannelCategory {\n  id\n  name\n  ...ServerChannelList_channelCategory\n  ...ActionAddChannelDialog_channelCategory\n}\n\nfragment InvitePeopleAction_me on User {\n  id\n}\n\nfragment InvitePeopleAction_server on Server {\n  id\n  title\n}\n\nfragment ServerChannelCategoryList_server on Server {\n  channelCategories(first: 10) {\n    edges {\n      node {\n        id\n        ...ChannelCategory_channelCategory\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannelList_channelCategory on ChannelCategory {\n  channels(first: 10) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n}\n\nfragment ServerFooter_server on Server {\n  serverUsers(first: 1, filters: {currentUser: true}) {\n    edges {\n      node {\n        id\n        nickname\n        user {\n          avatar\n          id\n        }\n      }\n    }\n  }\n}\n\nfragment ServerHeaderMenu_me on User {\n  ...InvitePeopleAction_me\n}\n\nfragment ServerHeaderMenu_server on Server {\n  ...InvitePeopleAction_server\n}\n\nfragment ServerHeader_me on User {\n  ...ServerHeaderMenu_me\n}\n\nfragment ServerHeader_server on Server {\n  title\n  ...ServerHeaderMenu_server\n}\n"
+    "text": "query ServerQuery(\n  $serverId: ID!\n) {\n  server: node(id: $serverId) {\n    __typename\n    id\n    ...ServerHeader_server\n    ...ServerFooter_server\n    ...ServerChannelCategoryList_server\n  }\n  me {\n    ...ServerHeader_me\n    id\n  }\n}\n\nfragment ActionAddChannelDialog_channelCategory on ChannelCategory {\n  id\n  name\n}\n\nfragment ChannelCategory_channelCategory on ChannelCategory {\n  id\n  name\n  ...ServerChannelList_channelCategory\n  ...ActionAddChannelDialog_channelCategory\n}\n\nfragment InvitePeopleAction_me on User {\n  id\n}\n\nfragment InvitePeopleAction_server on Server {\n  id\n  title\n}\n\nfragment ServerChannelCategoryList_server on Server {\n  channelCategories(first: 10) {\n    edges {\n      node {\n        id\n        ...ChannelCategory_channelCategory\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannelList_channelCategory on ChannelCategory {\n  channels(first: 10) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n  channelType\n}\n\nfragment ServerFooter_server on Server {\n  serverUsers(first: 1, filters: {currentUser: true}) {\n    edges {\n      node {\n        id\n        nickname\n        user {\n          avatar\n          id\n        }\n      }\n    }\n  }\n}\n\nfragment ServerHeaderMenu_me on User {\n  ...InvitePeopleAction_me\n}\n\nfragment ServerHeaderMenu_server on Server {\n  ...InvitePeopleAction_server\n}\n\nfragment ServerHeader_me on User {\n  ...ServerHeaderMenu_me\n}\n\nfragment ServerHeader_server on Server {\n  title\n  ...ServerHeaderMenu_server\n}\n"
   }
 };
 })();

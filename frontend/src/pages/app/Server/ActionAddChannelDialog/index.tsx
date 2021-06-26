@@ -1,16 +1,22 @@
 import { FormProvider, useForm } from 'react-hook-form'
-import { Dialog, makeStyles, Typography, InputAdornment } from '@material-ui/core'
+import {
+  Dialog, makeStyles, Typography, InputAdornment
+} from '@material-ui/core'
 import StyledDialogTitle from 'components/StyledDialogTitle'
 import StyledDialogContent from 'components/StyledDialogContent'
 import StyledDialogActions from 'components/StyledDialogActions'
 import StyledButton from 'components/Button'
 import InputTextField from 'components/InputTextField'
-import { Pound } from 'mdi-material-ui'
+import { Pound, VolumeHigh } from 'mdi-material-ui'
 import { useFragment, useMutation } from 'react-relay'
 import { graphql } from 'babel-plugin-relay/macro'
 import { ActionAddChannelDialog_channelCategory$key } from './__generated__/ActionAddChannelDialog_channelCategory.graphql'
 import { ActionAddChannelDialogMutation, ChannelCreateInput } from './__generated__/ActionAddChannelDialogMutation.graphql'
 import { useSnackbar } from 'notistack'
+import RadioGroupList from 'components/RadioGroupList'
+import RadioGroupListItem from 'components/RadioGroupList/RadioGroupListItem'
+
+import { useState } from 'react'
 
 type Inputs = Omit<ChannelCreateInput, 'channelCategoryId'>
 
@@ -33,6 +39,7 @@ const ActionAddChannelDialog: React.FC<ActionAddChannelDialogProps> = ({ open, h
     props.channelCategory
   )
 
+  const [type, setType] = useState('TEXT')
   const [commit, isInFlight] = useMutation<ActionAddChannelDialogMutation>(graphql`
     mutation ActionAddChannelDialogMutation($input: ChannelCreateInput!, $connections: [ID!]!) {
       channelCreate(input: $input) {
@@ -54,7 +61,8 @@ const ActionAddChannelDialog: React.FC<ActionAddChannelDialogProps> = ({ open, h
       variables: {
         input: {
           channelCategoryId: channelCategory.id,
-          name: data.name
+          name: data.name,
+          channelType: data.channelType,
         },
         connections: [
           `client:${channelCategory.id}:__ServerChannelList_channels_connection`
@@ -63,6 +71,7 @@ const ActionAddChannelDialog: React.FC<ActionAddChannelDialogProps> = ({ open, h
       onCompleted: (res, errors) => {
         if(errors) return errors.forEach(error => enqueueSnackbar(error.message, { variant: 'error' }))
 
+        methods.reset()
         handleClose()
       }
     })
@@ -74,6 +83,7 @@ const ActionAddChannelDialog: React.FC<ActionAddChannelDialogProps> = ({ open, h
       onClose={handleClose}
       maxWidth='xs' 
       PaperProps={{ className: classes.paper }}
+      onClick={e => e.stopPropagation()}
     >
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -87,11 +97,26 @@ const ActionAddChannelDialog: React.FC<ActionAddChannelDialogProps> = ({ open, h
           </StyledDialogTitle>
 
           <StyledDialogContent>
+            <RadioGroupList label='CHANNEL TYPE' name='channelType'>
+              <RadioGroupListItem
+                title='Text Channel'
+                subtitle='Post images, GIFs, stickers, opinions and puns'
+                value='TEXT'
+                leadIcon={<Pound />}
+              />
+              <RadioGroupListItem
+                title='Voice Channel'
+                subtitle='Hang out with voice, video and screen sharing'
+                value='VOICE'
+                leadIcon={<VolumeHigh />}
+              />
+            </RadioGroupList>
+
             <InputTextField
-              label='Channel Name'
+              label='CHANNEL NAME'
               name='name'
               startAdornment={
-                <InputAdornment position='start'>
+                <InputAdornment position='start' style={{ marginLeft: 8 }}>
                   <Pound />
                 </InputAdornment>
               }

@@ -4,32 +4,34 @@
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type MessagesQueryVariables = {
+export type ChannelType = "TEXT" | "VOICE" | "%future added value";
+export type ChannelQueryVariables = {
     channelId: string;
 };
-export type MessagesQueryResponse = {
+export type ChannelQueryResponse = {
     readonly channel: {
         readonly name?: string;
-        readonly " $fragmentRefs": FragmentRefs<"MessagesHeader_channel" | "MessageList_messages">;
+        readonly channelType?: ChannelType;
+        readonly " $fragmentRefs": FragmentRefs<"Text_channel">;
     } | null;
 };
-export type MessagesQuery = {
-    readonly response: MessagesQueryResponse;
-    readonly variables: MessagesQueryVariables;
+export type ChannelQuery = {
+    readonly response: ChannelQueryResponse;
+    readonly variables: ChannelQueryVariables;
 };
 
 
 
 /*
-query MessagesQuery(
+query ChannelQuery(
   $channelId: ID!
 ) {
   channel: node(id: $channelId) {
     __typename
-    ...MessagesHeader_channel
-    ...MessageList_messages
+    ...Text_channel
     ... on Channel {
       name
+      channelType
     }
     id
   }
@@ -63,6 +65,11 @@ fragment MessageList_messages on Channel {
 fragment MessagesHeader_channel on Channel {
   name
 }
+
+fragment Text_channel on Channel {
+  ...MessagesHeader_channel
+  ...MessageList_messages
+}
 */
 
 const node: ConcreteRequest = (function(){
@@ -91,17 +98,24 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "channelType",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v6 = [
   {
     "kind": "Literal",
     "name": "last",
@@ -113,7 +127,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "MessagesQuery",
+    "name": "ChannelQuery",
     "selections": [
       {
         "alias": "channel",
@@ -126,17 +140,13 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "MessagesHeader_channel"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "MessageList_messages"
+            "name": "Text_channel"
           },
           {
             "kind": "InlineFragment",
             "selections": [
-              (v2/*: any*/)
+              (v2/*: any*/),
+              (v3/*: any*/)
             ],
             "type": "Channel",
             "abstractKey": null
@@ -152,7 +162,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "MessagesQuery",
+    "name": "ChannelQuery",
     "selections": [
       {
         "alias": "channel",
@@ -162,15 +172,15 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               (v2/*: any*/),
               {
                 "alias": null,
-                "args": (v5/*: any*/),
+                "args": (v6/*: any*/),
                 "concreteType": "MessageConnection",
                 "kind": "LinkedField",
                 "name": "messages",
@@ -214,7 +224,7 @@ return {
                             "name": "author",
                             "plural": false,
                             "selections": [
-                              (v4/*: any*/),
+                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -239,8 +249,8 @@ return {
                             ],
                             "storageKey": null
                           },
-                          (v4/*: any*/),
-                          (v3/*: any*/)
+                          (v5/*: any*/),
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -284,13 +294,14 @@ return {
               },
               {
                 "alias": null,
-                "args": (v5/*: any*/),
+                "args": (v6/*: any*/),
                 "filters": null,
                 "handle": "connection",
                 "key": "MessageList_messages",
                 "kind": "LinkedHandle",
                 "name": "messages"
-              }
+              },
+              (v3/*: any*/)
             ],
             "type": "Channel",
             "abstractKey": null
@@ -301,14 +312,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6ea3328072988c9868e240096f8a5d01",
+    "cacheID": "7ebcfe4586c6c0a3dad780be861c52d9",
     "id": null,
     "metadata": {},
-    "name": "MessagesQuery",
+    "name": "ChannelQuery",
     "operationKind": "query",
-    "text": "query MessagesQuery(\n  $channelId: ID!\n) {\n  channel: node(id: $channelId) {\n    __typename\n    ...MessagesHeader_channel\n    ...MessageList_messages\n    ... on Channel {\n      name\n    }\n    id\n  }\n}\n\nfragment MessageList_messages on Channel {\n  messages(last: 30) {\n    edges {\n      node {\n        content\n        createdAt\n        author {\n          id\n          username\n          avatar\n          email\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n  id\n}\n\nfragment MessagesHeader_channel on Channel {\n  name\n}\n"
+    "text": "query ChannelQuery(\n  $channelId: ID!\n) {\n  channel: node(id: $channelId) {\n    __typename\n    ...Text_channel\n    ... on Channel {\n      name\n      channelType\n    }\n    id\n  }\n}\n\nfragment MessageList_messages on Channel {\n  messages(last: 30) {\n    edges {\n      node {\n        content\n        createdAt\n        author {\n          id\n          username\n          avatar\n          email\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n  id\n}\n\nfragment MessagesHeader_channel on Channel {\n  name\n}\n\nfragment Text_channel on Channel {\n  ...MessagesHeader_channel\n  ...MessageList_messages\n}\n"
   }
 };
 })();
-(node as any).hash = '688208704611e68f6bafb1e2fa9c7795';
+(node as any).hash = 'cf1a43c787829b62143bcb8f26504f95';
 export default node;

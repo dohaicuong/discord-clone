@@ -85,6 +85,7 @@ fragment ServerChannelList_channelCategory on ChannelCategory {
 fragment ServerChannel_channel on Channel {
   id
   name
+  channelType
 }
 */
 
@@ -294,6 +295,13 @@ return {
                                     "selections": [
                                       (v3/*: any*/),
                                       (v5/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "channelType",
+                                        "storageKey": null
+                                      },
                                       (v2/*: any*/)
                                     ],
                                     "storageKey": null
@@ -346,12 +354,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "917d8099586a27411b3e7c5d4c4e96f1",
+    "cacheID": "20126d7448a5f5349d2bff0350a8f18f",
     "id": null,
     "metadata": {},
     "name": "ServerChannelCategoryListPaginationQuery",
     "operationKind": "query",
-    "text": "query ServerChannelCategoryListPaginationQuery(\n  $count: Int! = 10\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...ServerChannelCategoryList_server_1G22uz\n    id\n  }\n}\n\nfragment ActionAddChannelDialog_channelCategory on ChannelCategory {\n  id\n  name\n}\n\nfragment ChannelCategory_channelCategory on ChannelCategory {\n  id\n  name\n  ...ServerChannelList_channelCategory\n  ...ActionAddChannelDialog_channelCategory\n}\n\nfragment ServerChannelCategoryList_server_1G22uz on Server {\n  channelCategories(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ChannelCategory_channelCategory\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannelList_channelCategory on ChannelCategory {\n  channels(first: 10) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n}\n"
+    "text": "query ServerChannelCategoryListPaginationQuery(\n  $count: Int! = 10\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...ServerChannelCategoryList_server_1G22uz\n    id\n  }\n}\n\nfragment ActionAddChannelDialog_channelCategory on ChannelCategory {\n  id\n  name\n}\n\nfragment ChannelCategory_channelCategory on ChannelCategory {\n  id\n  name\n  ...ServerChannelList_channelCategory\n  ...ActionAddChannelDialog_channelCategory\n}\n\nfragment ServerChannelCategoryList_server_1G22uz on Server {\n  channelCategories(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ChannelCategory_channelCategory\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannelList_channelCategory on ChannelCategory {\n  channels(first: 10) {\n    edges {\n      node {\n        id\n        ...ServerChannel_channel\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ServerChannel_channel on Channel {\n  id\n  name\n  channelType\n}\n"
   }
 };
 })();
