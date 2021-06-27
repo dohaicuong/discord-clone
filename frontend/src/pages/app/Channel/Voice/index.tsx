@@ -69,6 +69,10 @@ const Voice = () => {
     // eslint-disable-next-line
   }, [stream?.id, enqueueSnackbar, joinSessionCommit])
 
+  const handleStopCall = () => {
+    webRtcPeer?.dispose()
+  }
+
   return (
     <div className={classes.container}>
       <div className={classes.gradientTop} />
@@ -115,7 +119,10 @@ const Voice = () => {
             >
               <Mic />
             </Fab>
-            <Fab className={`${classes.controlButton} ${classes.endButton}`}>
+            <Fab
+              className={`${classes.controlButton} ${classes.endButton}`}
+              onClick={handleStopCall}
+            >
               <CallEnd />
             </Fab>
           </div>
