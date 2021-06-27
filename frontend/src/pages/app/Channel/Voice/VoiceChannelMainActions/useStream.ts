@@ -37,6 +37,13 @@ const useStream = () => {
     // eslint-disable-next-line
   }, [stream?.id])
 
+  const handleStop = () => {
+    const tracks = stream?.getTracks()
+    tracks?.forEach(track => track.stop())
+    setVideo(null)
+    setAudio(false)
+  }
+
   return {
     stream,
     video,
@@ -44,6 +51,7 @@ const useStream = () => {
     handleToggleScreen,
     audio,
     handleToggleAudio,
+    handleStop,
   }
 }
 export default useStream

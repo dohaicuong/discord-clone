@@ -1,77 +1,10 @@
-import { useRef, useState } from 'react'
-import { WebRtcPeer } from 'kurento-utils'
-import { useEffect } from 'react'
-import { useMutation } from 'react-relay'
-import { graphql } from 'babel-plugin-relay/macro'
-import { VoiceJoinSessionMutation } from './__generated__/VoiceJoinSessionMutation.graphql'
-import { useSnackbar } from 'notistack'
-import { useLocation } from 'react-router-dom'
-import { Fab, makeStyles } from '@material-ui/core'
-import {
-  getWebRtcPeer,
-  processLocalStream,
-  processServerInfo,
-} from './webRtcHelpers'
-import { Videocam, ScreenShare, Mic, CallEnd } from '@material-ui/icons'
-import useStream from './useStream'
-import clsx from 'clsx'
+import { useRef } from 'react'
+import { makeStyles } from '@material-ui/core'
+import VoiceChannelMainActions from './VoiceChannelMainActions'
 
 const Voice = () => {
   const classes = useStyles()
   const videoRef = useRef<HTMLVideoElement>()
-  const { enqueueSnackbar } = useSnackbar()
-
-  const [webRtcPeer, setWebRtcPeer] = useState<WebRtcPeer | null>(null)
-  const { pathname } = useLocation()
-  useEffect(() => {
-    return () => webRtcPeer?.dispose()
-    // eslint-disable-next-line
-  }, [pathname, webRtcPeer])
-
-  const {
-    stream,
-    video, handleToggleCamera, handleToggleScreen,
-    audio, handleToggleAudio,
-  } = useStream()
-
-  const [joinSessionCommit] = useMutation<VoiceJoinSessionMutation>(graphql`
-    mutation VoiceJoinSessionMutation($input: StreamSessionJoinInput!) {
-      streamSessionJoin(input: $input) {
-        answer
-        candidates
-      }
-    }
-  `)
-
-  useEffect(() => {
-    const start = async () => {
-      const webRtcPeer = await getWebRtcPeer({ remoteVideo: videoRef.current, videoStream: stream })
-      setWebRtcPeer(webRtcPeer)
-
-      const { offer, iceCandidates } = await processLocalStream(webRtcPeer)
-      joinSessionCommit({
-        variables: {
-          input: {
-            offer,
-            candidates: iceCandidates
-          }
-        },
-        onCompleted: (res, errors) => {
-          if(errors) return errors?.forEach(error => enqueueSnackbar(error.message, { variant: 'error' }))
-
-          const { answer, candidates } = res.streamSessionJoin
-          processServerInfo(webRtcPeer, answer, candidates as any[])
-        }
-      })
-    }
-    
-    if(stream) start()
-    // eslint-disable-next-line
-  }, [stream?.id, enqueueSnackbar, joinSessionCommit])
-
-  const handleStopCall = () => {
-    webRtcPeer?.dispose()
-  }
 
   return (
     <div className={classes.container}>
@@ -91,51 +24,10 @@ const Voice = () => {
         </div>
         <div className={classes.bottomControls}>
           <div style={{ flexGrow: 1 }} />
-          <div>
-            <Fab
-              className={clsx(
-                classes.controlButton,
-                video === 'camera' && classes.activeButton,
-              )}
-              onClick={handleToggleCamera}
-            >
-              <Videocam />
-            </Fab>
-            <Fab
-              className={clsx(
-                classes.controlButton,
-                video === 'screen' && classes.activeButton,
-              )}
-              onClick={handleToggleScreen}
-            >
-              <ScreenShare />
-            </Fab>
-            <Fab
-              className={clsx(
-                classes.controlButton,
-                audio && classes.activeButton
-              )}
-              onClick={handleToggleAudio}
-            >
-              <Mic />
-            </Fab>
-            <Fab
-              className={`${classes.controlButton} ${classes.endButton}`}
-              onClick={handleStopCall}
-            >
-              <CallEnd />
-            </Fab>
-          </div>
+          <VoiceChannelMainActions videoRef={videoRef} />
           <div style={{ flexGrow: 1 }} />
         </div>
       </div>
-
-      {/* <button onClick={() => startStreaming('Video')}>
-        Video
-      </button>
-      <button onClick={() => startStreaming('Screen')}>
-        Screen
-      </button> */}
     </div>
   )
 }
@@ -192,26 +84,4 @@ const useStyles = makeStyles({
     height: 56,
     display: 'flex'
   },
-  controlButton: {
-    margin: '0 8px',
-    background: '#2e3136',
-    color: '#fff',
-    '&:hover': {
-      background: '#151619'
-    }
-  },
-  endButton: {
-    background: '#ed4244',
-    color: '#fff',
-    '&:hover': {
-      background: '#ed4244'
-    }
-  },
-  activeButton: {
-    background: '#fff',
-    color: '#151619',
-    '&:hover': {
-      background: '#fff'
-    }
-  }
 })
