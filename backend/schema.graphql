@@ -120,6 +120,8 @@ type FriendRemovePayload {
   user: User
 }
 
+scalar IceCandidate
+
 input LoginMutationInput {
   email: String!
   password: String!
@@ -193,6 +195,7 @@ type Mutation {
   serverInviteUser(input: ServerInviteUserInput!): ServerInviteUserPayload!
   serverJoinUser(input: ServerJoinInput!): ServerJoinPayload!
   signup(input: SignupMutationInput!): SignupMutationPayload!
+  streamSessionJoin(input: StreamSessionJoinInput!): StreamSessionJoinPayload!
 }
 
 interface Node {
@@ -318,6 +321,16 @@ input SignupMutationInput {
 type SignupMutationPayload {
   token: String!
   user: User!
+}
+
+input StreamSessionJoinInput {
+  candidates: [IceCandidate!]!
+  offer: String!
+}
+
+type StreamSessionJoinPayload {
+  answer: String!
+  candidates: [IceCandidate!]!
 }
 
 type Subscription {

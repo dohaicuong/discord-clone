@@ -16,8 +16,6 @@ import { useSnackbar } from 'notistack'
 import RadioGroupList from 'components/RadioGroupList'
 import RadioGroupListItem from 'components/RadioGroupList/RadioGroupListItem'
 
-import { useState } from 'react'
-
 type Inputs = Omit<ChannelCreateInput, 'channelCategoryId'>
 
 type ActionAddChannelDialogProps = {
@@ -39,7 +37,6 @@ const ActionAddChannelDialog: React.FC<ActionAddChannelDialogProps> = ({ open, h
     props.channelCategory
   )
 
-  const [type, setType] = useState('TEXT')
   const [commit, isInFlight] = useMutation<ActionAddChannelDialogMutation>(graphql`
     mutation ActionAddChannelDialogMutation($input: ChannelCreateInput!, $connections: [ID!]!) {
       channelCreate(input: $input) {

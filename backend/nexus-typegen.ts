@@ -19,6 +19,7 @@ declare global {
      */
     upload<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Upload";
     media<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Media";
+    iceCandidate<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "IceCandidate";
   }
 }
 declare global {
@@ -33,6 +34,7 @@ declare global {
      */
     upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
     media<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Media";
+    iceCandidate<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "IceCandidate";
     /**
      * Adds a Relay-style connection to the type, with numerous options for configuration
      *
@@ -98,6 +100,10 @@ export interface NexusGenInputs {
     password: string; // String!
     username: string; // String!
   }
+  StreamSessionJoinInput: { // input type
+    candidates: NexusGenScalars['IceCandidate'][]; // [IceCandidate!]!
+    offer: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -112,6 +118,7 @@ export interface NexusGenScalars {
   Boolean: boolean
   ID: string
   DateTime: any
+  IceCandidate: any
   Media: Media
   RelayId: any
   Upload: FileUploadPromise
@@ -208,6 +215,10 @@ export interface NexusGenObjects {
   SignupMutationPayload: { // root type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
+  }
+  StreamSessionJoinPayload: { // root type
+    answer: string; // String!
+    candidates: NexusGenScalars['IceCandidate'][]; // [IceCandidate!]!
   }
   Subscription: {};
   User: { // root type
@@ -329,6 +340,7 @@ export interface NexusGenFieldTypes {
     serverInviteUser: NexusGenRootTypes['ServerInviteUserPayload']; // ServerInviteUserPayload!
     serverJoinUser: NexusGenRootTypes['ServerJoinPayload']; // ServerJoinPayload!
     signup: NexusGenRootTypes['SignupMutationPayload']; // SignupMutationPayload!
+    streamSessionJoin: NexusGenRootTypes['StreamSessionJoinPayload']; // StreamSessionJoinPayload!
   }
   PageInfo: { // field return type
     endCursor: string | null; // String
@@ -367,6 +379,10 @@ export interface NexusGenFieldTypes {
   SignupMutationPayload: { // field return type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
+  }
+  StreamSessionJoinPayload: { // field return type
+    answer: string; // String!
+    candidates: NexusGenScalars['IceCandidate'][]; // [IceCandidate!]!
   }
   Subscription: { // field return type
     messageCreated: NexusGenRootTypes['MessageCreateSubscriptionPayload'] | null; // MessageCreateSubscriptionPayload
@@ -488,6 +504,7 @@ export interface NexusGenFieldTypeNames {
     serverInviteUser: 'ServerInviteUserPayload'
     serverJoinUser: 'ServerJoinPayload'
     signup: 'SignupMutationPayload'
+    streamSessionJoin: 'StreamSessionJoinPayload'
   }
   PageInfo: { // field return type name
     endCursor: 'String'
@@ -526,6 +543,10 @@ export interface NexusGenFieldTypeNames {
   SignupMutationPayload: { // field return type name
     token: 'String'
     user: 'User'
+  }
+  StreamSessionJoinPayload: { // field return type name
+    answer: 'String'
+    candidates: 'IceCandidate'
   }
   Subscription: { // field return type name
     messageCreated: 'MessageCreateSubscriptionPayload'
@@ -609,6 +630,9 @@ export interface NexusGenArgTypes {
     }
     signup: { // args
       input: NexusGenInputs['SignupMutationInput']; // SignupMutationInput!
+    }
+    streamSessionJoin: { // args
+      input: NexusGenInputs['StreamSessionJoinInput']; // StreamSessionJoinInput!
     }
   }
   Query: {

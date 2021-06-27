@@ -13,7 +13,9 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "clsx": "^1.1.1",
     "history": "^5.0.0",
+    "kurento-utils": "^6.16.0",
     "mdi-material-ui": "^6.22.1",
     "notistack": "^1.0.9",
     "react": "^0.0.0-experimental-459c34fde",
@@ -60,6 +62,7 @@
     ]
   },
   "devDependencies": {
+    "@types/kurento-utils": "^6.7.1",
     "@types/react-helmet": "^6.1.1",
     "@types/react-relay": "^11.0.1",
     "@types/relay-runtime": "^11.0.0",
