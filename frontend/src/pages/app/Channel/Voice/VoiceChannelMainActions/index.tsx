@@ -50,8 +50,8 @@ const VoiceChannelMainActions: React.FC<VoiceChannelMainActionsProps> = ({ video
     const start = async () => {
       const webRtcPeer = await getWebRtcPeer({ remoteVideo: videoRef.current, videoStream: stream })
       setWebRtcPeer(webRtcPeer)
-
       const { offer, iceCandidates } = await processLocalStream(webRtcPeer)
+      
       joinSessionCommit({
         variables: {
           input: {
@@ -68,7 +68,7 @@ const VoiceChannelMainActions: React.FC<VoiceChannelMainActionsProps> = ({ video
       })
     }
     
-    if(stream) start()
+    start()
     // eslint-disable-next-line
   }, [stream?.id, enqueueSnackbar, joinSessionCommit])
 

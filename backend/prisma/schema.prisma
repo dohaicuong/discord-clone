@@ -11,8 +11,8 @@ generator client {
 }
 
 model User {
-  id       String @id @default(cuid())
-  email    String @unique
+  id       String  @id @default(cuid())
+  email    String  @unique
   password String
   username String
   avatar   String?
@@ -23,7 +23,8 @@ model User {
 
   userServers UsersOnServers[]
 
-  messages Message[]
+  messages       Message[]
+  streamSessions StreamSession[]
 }
 
 enum UserRole {
@@ -47,7 +48,7 @@ model UsersOnServers {
 }
 
 model Server {
-  id    String @id @default(cuid())
+  id    String  @id @default(cuid())
   title String
   logo  String?
 
@@ -74,12 +75,19 @@ enum ChannelType {
 model Channel {
   id   String @id @default(cuid())
   name String
-  channelType ChannelType @default(TEXT)
+
 
   channelCategory   ChannelCategory? @relation(fields: [channelCategoryId], references: [id])
   channelCategoryId String?
 
+  channelType ChannelType @default(TEXT)
+
+  // TEXT channel
   mesasges Message[]
+
+  // VOICE channel
+  mediaPipelineId String?
+  streamSessions  StreamSession[]
 }
 
 model Message {
@@ -93,4 +101,32 @@ model Message {
 
   author User   @relation(fields: [userId], references: [id])
   userId String
+}
+
+enum StreamSessionVideoType {
+  SCREEN
+  CAMERA
+  OFF
+}
+
+enum StreamSessionAudioType {
+  ON
+  OFF
+}
+
+model StreamSession {
+  id String @id @default(cuid())
+
+  webRtcEndpointId String
+  video            StreamSessionVideoType @default(OFF)
+  audio            StreamSessionAudioType @default(OFF)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
 }

@@ -8,6 +8,7 @@ type Channel implements Node {
 
   """Relay ID"""
   id: ID!
+  mediaPipelineId: String
   messages(
     """Returns the elements in the list that come before the specified cursor"""
     before: String
@@ -16,6 +17,13 @@ type Channel implements Node {
     last: Int!
   ): MessageConnection!
   name: String!
+  streamSessions(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the first n elements from the list."""
+    first: Int!
+  ): StreamSessionConnection!
 }
 
 type ChannelCategory implements Node {
@@ -311,6 +319,14 @@ input ServerUsersConnectionFilters {
   currentUser: Boolean
 }
 
+input SessionCreatedSubscriptionFilters {
+  channelId: RelayId
+}
+
+type SessionCreatedSubscriptionPayload {
+  streamSession: StreamSession!
+}
+
 input SignupMutationInput {
   avatar: Upload
   email: String!
@@ -323,18 +339,64 @@ type SignupMutationPayload {
   user: User!
 }
 
+type StreamSession implements Node {
+  audio: StreamSessionAudioType!
+  channel: Channel!
+  endedAt: DateTime
+
+  """Relay ID"""
+  id: ID!
+  startedAt: DateTime!
+  user: User!
+  video: StreamSessionVideoType!
+}
+
+enum StreamSessionAudioType {
+  OFF
+  ON
+}
+
+type StreamSessionConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [StreamSessionEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
+type StreamSessionEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: StreamSession!
+}
+
 input StreamSessionJoinInput {
   candidates: [IceCandidate!]!
+  channelId: RelayId!
   offer: String!
 }
 
 type StreamSessionJoinPayload {
   answer: String!
   candidates: [IceCandidate!]!
+  streamSession: StreamSession!
+}
+
+enum StreamSessionVideoType {
+  CAMERA
+  OFF
+  SCREEN
 }
 
 type Subscription {
   messageCreated(filters: MessageCreateSubscriptionFilters): MessageCreateSubscriptionPayload
+  streamSessionCreated(filters: SessionCreatedSubscriptionFilters): SessionCreatedSubscriptionPayload
 }
 
 """The `Upload` scalar type represents a file upload."""

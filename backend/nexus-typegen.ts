@@ -94,6 +94,9 @@ export interface NexusGenInputs {
   ServerUsersConnectionFilters: { // input type
     currentUser?: boolean | null; // Boolean
   }
+  SessionCreatedSubscriptionFilters: { // input type
+    channelId?: NexusGenScalars['RelayId'] | null; // RelayId
+  }
   SignupMutationInput: { // input type
     avatar?: NexusGenScalars['Upload'] | null; // Upload
     email: string; // String!
@@ -102,12 +105,15 @@ export interface NexusGenInputs {
   }
   StreamSessionJoinInput: { // input type
     candidates: NexusGenScalars['IceCandidate'][]; // [IceCandidate!]!
+    channelId: NexusGenScalars['RelayId']; // RelayId!
     offer: string; // String!
   }
 }
 
 export interface NexusGenEnums {
   ChannelType: "TEXT" | "VOICE"
+  StreamSessionAudioType: "OFF" | "ON"
+  StreamSessionVideoType: "CAMERA" | "OFF" | "SCREEN"
   UserRole: "OTHER" | "SERVER_BOOSTER" | "SERVER_OWNER"
 }
 
@@ -128,6 +134,7 @@ export interface NexusGenObjects {
   Channel: { // root type
     channelCategory?: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
     channelType: NexusGenEnums['ChannelType']; // ChannelType!
+    mediaPipelineId?: string | null; // String
     name: string; // String!
   }
   ChannelCategory: { // root type
@@ -212,13 +219,31 @@ export interface NexusGenObjects {
     edges: NexusGenRootTypes['UsersOnServersEdge'][]; // [UsersOnServersEdge!]!
     pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
+  SessionCreatedSubscriptionPayload: { // root type
+    streamSession: NexusGenRootTypes['StreamSession']; // StreamSession!
+  }
   SignupMutationPayload: { // root type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
+  StreamSession: { // root type
+    audio: NexusGenEnums['StreamSessionAudioType']; // StreamSessionAudioType!
+    endedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    video: NexusGenEnums['StreamSessionVideoType']; // StreamSessionVideoType!
+  }
+  StreamSessionConnection: { // root type
+    edges: NexusGenRootTypes['StreamSessionEdge'][]; // [StreamSessionEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  StreamSessionEdge: { // root type
+    cursor: string; // String!
+    node: NexusGenRootTypes['StreamSession']; // StreamSession!
+  }
   StreamSessionJoinPayload: { // root type
     answer: string; // String!
     candidates: NexusGenScalars['IceCandidate'][]; // [IceCandidate!]!
+    streamSession: NexusGenRootTypes['StreamSession']; // StreamSession!
   }
   Subscription: {};
   User: { // root type
@@ -249,7 +274,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Node: NexusGenRootTypes['Channel'] | NexusGenRootTypes['ChannelCategory'] | NexusGenRootTypes['Message'] | NexusGenRootTypes['Server'] | NexusGenRootTypes['User'] | NexusGenRootTypes['UsersOnServers'];
+  Node: NexusGenRootTypes['Channel'] | NexusGenRootTypes['ChannelCategory'] | NexusGenRootTypes['Message'] | NexusGenRootTypes['Server'] | NexusGenRootTypes['StreamSession'] | NexusGenRootTypes['User'] | NexusGenRootTypes['UsersOnServers'];
 }
 
 export interface NexusGenUnions {
@@ -264,8 +289,10 @@ export interface NexusGenFieldTypes {
     channelCategory: NexusGenRootTypes['ChannelCategory'] | null; // ChannelCategory
     channelType: NexusGenEnums['ChannelType']; // ChannelType!
     id: string; // ID!
+    mediaPipelineId: string | null; // String
     messages: NexusGenRootTypes['MessageConnection']; // MessageConnection!
     name: string; // String!
+    streamSessions: NexusGenRootTypes['StreamSessionConnection']; // StreamSessionConnection!
   }
   ChannelCategory: { // field return type
     channels: NexusGenRootTypes['ChannelConnection']; // ChannelConnection!
@@ -376,16 +403,38 @@ export interface NexusGenFieldTypes {
     pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
     totalCount: number; // Int!
   }
+  SessionCreatedSubscriptionPayload: { // field return type
+    streamSession: NexusGenRootTypes['StreamSession']; // StreamSession!
+  }
   SignupMutationPayload: { // field return type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
+  StreamSession: { // field return type
+    audio: NexusGenEnums['StreamSessionAudioType']; // StreamSessionAudioType!
+    channel: NexusGenRootTypes['Channel']; // Channel!
+    endedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // ID!
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User']; // User!
+    video: NexusGenEnums['StreamSessionVideoType']; // StreamSessionVideoType!
+  }
+  StreamSessionConnection: { // field return type
+    edges: NexusGenRootTypes['StreamSessionEdge'][]; // [StreamSessionEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+  }
+  StreamSessionEdge: { // field return type
+    cursor: string; // String!
+    node: NexusGenRootTypes['StreamSession']; // StreamSession!
+  }
   StreamSessionJoinPayload: { // field return type
     answer: string; // String!
     candidates: NexusGenScalars['IceCandidate'][]; // [IceCandidate!]!
+    streamSession: NexusGenRootTypes['StreamSession']; // StreamSession!
   }
   Subscription: { // field return type
     messageCreated: NexusGenRootTypes['MessageCreateSubscriptionPayload'] | null; // MessageCreateSubscriptionPayload
+    streamSessionCreated: NexusGenRootTypes['SessionCreatedSubscriptionPayload'] | null; // SessionCreatedSubscriptionPayload
   }
   User: { // field return type
     avatar: NexusGenScalars['Media'] | null; // Media
@@ -428,8 +477,10 @@ export interface NexusGenFieldTypeNames {
     channelCategory: 'ChannelCategory'
     channelType: 'ChannelType'
     id: 'ID'
+    mediaPipelineId: 'String'
     messages: 'MessageConnection'
     name: 'String'
+    streamSessions: 'StreamSessionConnection'
   }
   ChannelCategory: { // field return type name
     channels: 'ChannelConnection'
@@ -540,16 +591,38 @@ export interface NexusGenFieldTypeNames {
     pageInfo: 'PageInfo'
     totalCount: 'Int'
   }
+  SessionCreatedSubscriptionPayload: { // field return type name
+    streamSession: 'StreamSession'
+  }
   SignupMutationPayload: { // field return type name
     token: 'String'
     user: 'User'
   }
+  StreamSession: { // field return type name
+    audio: 'StreamSessionAudioType'
+    channel: 'Channel'
+    endedAt: 'DateTime'
+    id: 'ID'
+    startedAt: 'DateTime'
+    user: 'User'
+    video: 'StreamSessionVideoType'
+  }
+  StreamSessionConnection: { // field return type name
+    edges: 'StreamSessionEdge'
+    pageInfo: 'PageInfo'
+  }
+  StreamSessionEdge: { // field return type name
+    cursor: 'String'
+    node: 'StreamSession'
+  }
   StreamSessionJoinPayload: { // field return type name
     answer: 'String'
     candidates: 'IceCandidate'
+    streamSession: 'StreamSession'
   }
   Subscription: { // field return type name
     messageCreated: 'MessageCreateSubscriptionPayload'
+    streamSessionCreated: 'SessionCreatedSubscriptionPayload'
   }
   User: { // field return type name
     avatar: 'Media'
@@ -592,6 +665,10 @@ export interface NexusGenArgTypes {
     messages: { // args
       before?: string | null; // String
       last: number; // Int!
+    }
+    streamSessions: { // args
+      after?: string | null; // String
+      first: number; // Int!
     }
   }
   ChannelCategory: {
@@ -662,6 +739,9 @@ export interface NexusGenArgTypes {
     messageCreated: { // args
       filters?: NexusGenInputs['MessageCreateSubscriptionFilters'] | null; // MessageCreateSubscriptionFilters
     }
+    streamSessionCreated: { // args
+      filters?: NexusGenInputs['SessionCreatedSubscriptionFilters'] | null; // SessionCreatedSubscriptionFilters
+    }
   }
   User: {
     friends: { // args
@@ -676,7 +756,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  Node: "Channel" | "ChannelCategory" | "Message" | "Server" | "User" | "UsersOnServers"
+  Node: "Channel" | "ChannelCategory" | "Message" | "Server" | "StreamSession" | "User" | "UsersOnServers"
 }
 
 export interface NexusGenTypeInterfaces {
@@ -684,6 +764,7 @@ export interface NexusGenTypeInterfaces {
   ChannelCategory: "Node"
   Message: "Node"
   Server: "Node"
+  StreamSession: "Node"
   User: "Node"
   UsersOnServers: "Node"
 }
