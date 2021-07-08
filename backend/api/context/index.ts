@@ -6,6 +6,7 @@ import kurento from 'kurento-client'
 import * as cryptoService from './cryptoService'
 import * as jwtService from './jwtService'
 import * as fileService from './fileService'
+import { pipeline } from 'stream'
 
 const prisma = new PrismaClient()
 const promiseKurentoClient = kurento('ws://localhost:8888/kurento')
@@ -19,6 +20,15 @@ export type Context = {
   pubsub: PubSub
   fileService: typeof fileService
 }
+
+// promiseKurentoClient.then(async kurento => {
+//   const manager = await kurento.getServerManager()
+//   const pipelines = await manager.getPipelines()
+//   pipelines.forEach(async pipeline => {
+//     const mediaObjects = (await pipeline.getChildren()).map(object => object.id)
+//     console.log(mediaObjects)
+//   })
+// })
 
 export const context = async (request: FastifyRequest, reply: FastifyReply) => {
   const token = request.headers.authorization?.replace('Bearer ', '')

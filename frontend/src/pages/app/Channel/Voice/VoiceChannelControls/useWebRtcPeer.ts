@@ -43,8 +43,6 @@ const useWebRtcPeer = () => {
     // eslint-disable-next-line
   }, [pathname, stream])
 
-  
-
   return {
     webRtcPeer,
     signalling,

@@ -11,8 +11,7 @@ const Voice = () => {
   const [mainStream, setMainStream] = useState<MediaStream | null>(null)
   const [localStream, setLocalStream] = useState<MediaStream | null>(null)
   // joinSession (userId, channelId, offer, candidates) -> answer, candidates, sessions
-  // updateSession(sessionId, offer, candidates)
-  // leaveSession
+  // leaveSession (sessionId)
   // subscribe to channel -> new session, updated session
   // connect to session (offer, candidates) -> answer, candidates
   

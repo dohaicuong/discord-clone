@@ -15,6 +15,9 @@ export type VoiceChannelControlsJoinMutationResponse = {
     readonly streamSessionJoin: {
         readonly answer: string;
         readonly candidates: ReadonlyArray<unknown>;
+        readonly streamSession: {
+            readonly id: string;
+        };
     };
 };
 export type VoiceChannelControlsJoinMutation = {
@@ -31,6 +34,9 @@ mutation VoiceChannelControlsJoinMutation(
   streamSessionJoin(input: $input) {
     answer
     candidates
+    streamSession {
+      id
+    }
   }
 }
 */
@@ -71,6 +77,24 @@ v1 = [
         "kind": "ScalarField",
         "name": "candidates",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "StreamSession",
+        "kind": "LinkedField",
+        "name": "streamSession",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -94,14 +118,14 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "15702be0c3ecb50794e27cb88bbfd478",
+    "cacheID": "e454572186fbfe7cda913bdcfe14e368",
     "id": null,
     "metadata": {},
     "name": "VoiceChannelControlsJoinMutation",
     "operationKind": "mutation",
-    "text": "mutation VoiceChannelControlsJoinMutation(\n  $input: StreamSessionJoinInput!\n) {\n  streamSessionJoin(input: $input) {\n    answer\n    candidates\n  }\n}\n"
+    "text": "mutation VoiceChannelControlsJoinMutation(\n  $input: StreamSessionJoinInput!\n) {\n  streamSessionJoin(input: $input) {\n    answer\n    candidates\n    streamSession {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'ebc891467d4260f539a574590b705a86';
+(node as any).hash = '3414153df51bd980e3cbba1030ca48c2';
 export default node;

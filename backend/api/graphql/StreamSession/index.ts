@@ -4,7 +4,6 @@ import { enumType, extendType, objectType } from 'nexus'
 export * from './MutationJoinSession'
 export * from './SubscriptionSessionCreated'
 
-
 export const StreamSessionVideoType = enumType({
   name: 'StreamSessionVideoType',
   members: ['SCREEN', 'CAMERA', 'OFF']

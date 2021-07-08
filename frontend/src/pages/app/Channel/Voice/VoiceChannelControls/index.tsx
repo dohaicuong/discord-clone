@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useSnackbar } from "notistack"
 import { useMutation } from "react-relay"
 import { graphql } from "babel-plugin-relay/macro"
@@ -13,6 +13,11 @@ import VideoControls from './VideoControls'
 import useWebRtcPeer from "./useWebRtcPeer"
 
 import { VoiceChannelControlsJoinMutation } from "./__generated__/VoiceChannelControlsJoinMutation.graphql"
+import { VoiceChannelControlsLeaveMutation } from "./__generated__/VoiceChannelControlsLeaveMutation.graphql"
+import { useCallback } from "react"
+import { useLocation } from "react-router-dom"
+import { useLayoutEffect } from "react"
+import { useRef } from "react"
 
 type VoiceChannelControlsProps = {
   channelId: string
@@ -22,6 +27,18 @@ type VoiceChannelControlsProps = {
 const VoiceChannelControls: React.FC<VoiceChannelControlsProps> = ({ channelId, onLocalStreamChange, onRemoteStream }) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
+
+  const [joinSessionCommit] = useMutation<VoiceChannelControlsJoinMutation>(graphql`
+    mutation VoiceChannelControlsJoinMutation($input: StreamSessionJoinInput!) {
+      streamSessionJoin(input: $input) {
+        answer
+        candidates
+        streamSession {
+          id
+        }
+      }
+    }
+  `)
 
   const {
     webRtcPeer, signalling, serverSignalling,
@@ -40,16 +57,7 @@ const VoiceChannelControls: React.FC<VoiceChannelControlsProps> = ({ channelId, 
       }
     }
   }, [webRtcPeer])
-
-  const [joinSessionCommit] = useMutation<VoiceChannelControlsJoinMutation>(graphql`
-    mutation VoiceChannelControlsJoinMutation($input: StreamSessionJoinInput!) {
-      streamSessionJoin(input: $input) {
-        answer
-        candidates
-      }
-    }
-  `)
-
+  
   useEffect(() => {
     onLocalStreamChange?.(stream)
     const start = async () => {
@@ -69,7 +77,7 @@ const VoiceChannelControls: React.FC<VoiceChannelControlsProps> = ({ channelId, 
         onCompleted: (res, errors) => {
           if(errors) return errors?.forEach(error => enqueueSnackbar(error.message, { variant: 'error' }))
 
-          const { answer, candidates } = res.streamSessionJoin
+          const { answer, candidates, streamSession } = res.streamSessionJoin
           serverSignalling(answer, candidates)
         }
       })

@@ -45,12 +45,6 @@ export const StreamSessionJoinMutation = extendType({
         // const hubport = await (composite as any).createHubPort()
 
         const webRtcEndpoint = await pipeline.create('WebRtcEndpoint')
-        addIceCandidates(webRtcEndpoint, input.candidates)
-
-        await webRtcEndpoint.connect(webRtcEndpoint)
-
-        const { answer, candidates } = await processLocalInfo(webRtcEndpoint, input.offer)
-
         const streamSession = await ctx.prisma.streamSession.create({
           data: {
             userId: ctx.userId,
@@ -58,6 +52,28 @@ export const StreamSessionJoinMutation = extendType({
             webRtcEndpointId: webRtcEndpoint.id
           }
         })
+
+        addIceCandidates(webRtcEndpoint, input.candidates)
+
+        webRtcEndpoint.on('MediaFlowInStateChange', async event => {
+          if(event.state === 'NOT_FLOWING') {
+            await ctx.prisma.streamSession.delete({
+              where: { id: streamSession.id },
+            })
+
+            ctx.pubsub.publish({
+              topic: 'STREAM_SESSION_DELETED',
+              payload: {
+                channelId: streamSession.channelId,
+                streamSession
+              }
+            })
+          }
+        })
+
+        await webRtcEndpoint.connect(webRtcEndpoint)
+        const { answer, candidates } = await processLocalInfo(webRtcEndpoint, input.offer)
+
         ctx.pubsub.publish({
           topic: 'STREAM_SESSION_CREATED',
           payload: {
