@@ -1,21 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react"
 
+export type useStreamPayload = {
+  stream: MediaStream | null
+  video: "camera" | "screen" | null
+  audio: boolean
+  handleToggleCamera: () => void
+  handleToggleScreen: () => void
+  handleToggleAudio: () => void
+  handleStop: () => void
+}
 const useStream = () => {
   const [video, setVideo] = useState<null | 'camera' | 'screen'>(null)
-
-  const handleToggleCamera = () => {
-    setVideo(pre => pre === 'camera' ? null : 'camera')
-  }
-  const handleToggleScreen = () => {
-    setVideo(pre => pre === 'screen' ? null : 'screen')
-  }
+  const handleToggleCamera = () => setVideo(pre => pre === 'camera' ? null : 'camera')
+  const handleToggleScreen = () => setVideo(pre => pre === 'screen' ? null : 'screen')
 
   const [audio, setAudio] = useState<boolean>(false)
-  const handleToggleAudio = () => setAudio(pre => !pre)
+  const handleToggleMic = () => setAudio(pre => !pre)
 
   const [stream, setStream] = useState<MediaStream | null>(null)
+  const handleStop = () => {
+    const tracks = stream?.getTracks()
+    tracks?.forEach(track => track.stop())
+    setVideo(null)
+    setAudio(false)
+  }
+
+  // get stream when input change effect
   useEffect(() => {
-    getVideoStream(video, audio)
+    getLocalStream(video, audio)
       .then(stream => {
         setStream(stream)
         if(stream) {
@@ -27,6 +39,7 @@ const useStream = () => {
       })
   }, [video, audio])
 
+  // cleanup stream effect
   useEffect(() => {
     return () => {
       if(stream) {
@@ -35,28 +48,18 @@ const useStream = () => {
       }
     }
     // eslint-disable-next-line
-  }, [stream?.id])
-
-  const handleStop = () => {
-    const tracks = stream?.getTracks()
-    tracks?.forEach(track => track.stop())
-    setVideo(null)
-    setAudio(false)
-  }
+  }, [stream]) // TODO: ?.id
 
   return {
     stream,
-    video,
-    handleToggleCamera,
-    handleToggleScreen,
-    audio,
-    handleToggleAudio,
+    video, handleToggleCamera, handleToggleScreen,
+    audio, handleToggleMic,
     handleStop,
   }
 }
 export default useStream
 
-const getVideoStream = async (video: null | 'camera' | 'screen', audio: boolean): Promise<MediaStream | null> => {
+const getLocalStream = async (video: null | 'camera' | 'screen', audio: boolean): Promise<MediaStream | null> => {
   if(video === 'screen') {
     const stream: MediaStream = await (navigator.mediaDevices as any).getDisplayMedia({
       audio,
@@ -74,4 +77,4 @@ const getVideoStream = async (video: null | 'camera' | 'screen', audio: boolean)
   }
   
   return null
-}
+} 

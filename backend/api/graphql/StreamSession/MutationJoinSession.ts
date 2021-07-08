@@ -1,4 +1,3 @@
-import kurento from "kurento-client"
 import { extendType, inputObjectType, nonNull, objectType } from "nexus"
 import { addIceCandidates, getOrCreateMediapipeline, processLocalInfo } from './_webRtcHelpers'
 
@@ -41,6 +40,9 @@ export const StreamSessionJoinMutation = extendType({
             data: { mediaPipelineId: pipeline.id }
           })
         }
+
+        // const composite = await pipeline.create('Composite')
+        // const hubport = await (composite as any).createHubPort()
 
         const webRtcEndpoint = await pipeline.create('WebRtcEndpoint')
         addIceCandidates(webRtcEndpoint, input.candidates)

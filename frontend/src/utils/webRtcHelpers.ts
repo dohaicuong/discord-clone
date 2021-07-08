@@ -10,7 +10,8 @@ export const getAudioStream = async (): Promise<MediaStream | undefined> => {
 
 export const getWebRtcPeer = (options: any): Promise<WebRtcPeer> => {
   const createPeer = options.videoStream 
-    ? WebRtcPeer.WebRtcPeerSendrecv 
+    // ? WebRtcPeer.WebRtcPeerSendonly
+    ? WebRtcPeer.WebRtcPeerSendrecv
     : WebRtcPeer.WebRtcPeerRecvonly
     
   return new Promise((resolve, reject) => {

@@ -5,26 +5,27 @@
 import { ConcreteRequest } from "relay-runtime";
 export type StreamSessionJoinInput = {
     candidates: Array<unknown>;
+    channelId: unknown;
     offer: string;
 };
-export type VoiceJoinSessionMutationVariables = {
+export type VoiceChannelControlsJoinMutationVariables = {
     input: StreamSessionJoinInput;
 };
-export type VoiceJoinSessionMutationResponse = {
+export type VoiceChannelControlsJoinMutationResponse = {
     readonly streamSessionJoin: {
         readonly answer: string;
         readonly candidates: ReadonlyArray<unknown>;
     };
 };
-export type VoiceJoinSessionMutation = {
-    readonly response: VoiceJoinSessionMutationResponse;
-    readonly variables: VoiceJoinSessionMutationVariables;
+export type VoiceChannelControlsJoinMutation = {
+    readonly response: VoiceChannelControlsJoinMutationResponse;
+    readonly variables: VoiceChannelControlsJoinMutationVariables;
 };
 
 
 
 /*
-mutation VoiceJoinSessionMutation(
+mutation VoiceChannelControlsJoinMutation(
   $input: StreamSessionJoinInput!
 ) {
   streamSessionJoin(input: $input) {
@@ -80,7 +81,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "VoiceJoinSessionMutation",
+    "name": "VoiceChannelControlsJoinMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -89,18 +90,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "VoiceJoinSessionMutation",
+    "name": "VoiceChannelControlsJoinMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "c894fe2c976f06593f76ff967059bd19",
+    "cacheID": "15702be0c3ecb50794e27cb88bbfd478",
     "id": null,
     "metadata": {},
-    "name": "VoiceJoinSessionMutation",
+    "name": "VoiceChannelControlsJoinMutation",
     "operationKind": "mutation",
-    "text": "mutation VoiceJoinSessionMutation(\n  $input: StreamSessionJoinInput!\n) {\n  streamSessionJoin(input: $input) {\n    answer\n    candidates\n  }\n}\n"
+    "text": "mutation VoiceChannelControlsJoinMutation(\n  $input: StreamSessionJoinInput!\n) {\n  streamSessionJoin(input: $input) {\n    answer\n    candidates\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'e5fa2ea36332aa0e0abc0fa3c66ee081';
+(node as any).hash = 'ebc891467d4260f539a574590b705a86';
 export default node;

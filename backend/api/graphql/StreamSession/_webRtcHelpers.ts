@@ -17,3 +17,13 @@ export const processLocalInfo = async (webRtcEndpoint: kurento.WebRtcEndpoint, o
 
   return { answer, candidates }
 }
+
+export const getOrCreateMediapipeline = async (kurentoClient: kurento.ClientInstance, mediaPipelineId: string | null) => {
+  return mediaPipelineId
+    ? await kurentoClient.getMediaobjectById<kurento.MediaPipeline>(mediaPipelineId)
+      .catch(err => {
+        // if the current is expired, create a new one
+        return kurentoClient.create('MediaPipeline')
+      })
+    : await kurentoClient.create('MediaPipeline')
+}

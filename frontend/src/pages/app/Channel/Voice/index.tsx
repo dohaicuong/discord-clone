@@ -1,32 +1,55 @@
-import { useRef } from 'react'
-import { makeStyles } from '@material-ui/core'
-import VoiceChannelMainActions from './VoiceChannelMainActions'
+import { Grid, makeStyles } from '@material-ui/core'
+import { useState } from 'react'
+import VoiceChannelControls from './VoiceChannelControls'
+import Video from './Video'
+import { useParams } from 'react-router-dom'
 
 const Voice = () => {
   const classes = useStyles()
-  const videoRef = useRef<HTMLVideoElement>()
-
+  const params = useParams()
+  
+  const [mainStream, setMainStream] = useState<MediaStream | null>(null)
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null)
+  // joinSession (userId, channelId, offer, candidates) -> answer, candidates, sessions
+  // updateSession(sessionId, offer, candidates)
+  // leaveSession
+  // subscribe to channel -> new session, updated session
+  // connect to session (offer, candidates) -> answer, candidates
+  
   return (
-    <div className={classes.container}>
-      <div className={classes.gradientTop} />
-      <div className={classes.gradientBottom} />
+    <div className={classes.callContainer}>
+      <Grid container spacing={2} className={classes.videosContainer}>
+        <Grid item xs className={classes.mainVideoContainer}>
+          <Video
+            stream={mainStream}
+            className={classes.mainVideoWrapper}
+          />
+        </Grid>
+        <Grid item className={classes.listVideoContainer}>
+          <Grid container className={classes.listVideoContainerInner}>
+            <Video
+              className={classes.sideVideoWrapper}
+              stream={localStream}
+              // onClick={setMainStream}
+            />
 
-      <video
-        ref={videoRef as any}
-        autoPlay
-        playsInline
-        className={classes.video}
-      />
+            {/* {Array(3).fill(1).map((_, i) => (
+              <Video
+                key={i}
+                className={classes.sideVideoWrapper}
+                // onClick={setMainStream}
+              />
+            ))} */}
+          </Grid>
+        </Grid>
+      </Grid>
 
       <div className={classes.videoControls}>
-        <div className={classes.topControls}>
-          controls
-        </div>
-        <div className={classes.bottomControls}>
-          <div style={{ flexGrow: 1 }} />
-          <VoiceChannelMainActions videoRef={videoRef} />
-          <div style={{ flexGrow: 1 }} />
-        </div>
+        <VoiceChannelControls
+          channelId={params.channelId}
+          onLocalStreamChange={setLocalStream}
+          onRemoteStream={setMainStream}
+        />
       </div>
     </div>
   )
@@ -34,14 +57,23 @@ const Voice = () => {
 export default Voice
 
 const useStyles = makeStyles({
-  container: {
+  callContainer: {
     position: 'relative',
     width: '100%',
     height: '100%',
     background: '#000',
+    overflow: 'hidden',
+    '&:hover > $videoControls': {
+      opacity: 1,
+      transition: 'all 0.35s ease-in-out'
+    }
   },
+
   videoControls: {
-    // pointerEvents: 'none',
+    opacity: 0,
+    transition: 'all 0.35s ease-in-out',
+
+    pointerEvents: 'none',
     position: 'absolute',
     top: 0,
     right: 0,
@@ -52,36 +84,48 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-  gradientTop: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    left: 0,
-    pointerEvents: 'none',
-    height: 160,
-    backgroundImage: 'linear-gradient(#000,rgba(0,0,0,.738) 19%,rgba(0,0,0,.541) 34%,rgba(0,0,0,.382) 47%,rgba(0,0,0,.278) 56.5%,rgba(0,0,0,.194) 65%,rgba(0,0,0,.126) 73%,rgba(0,0,0,.075) 80.2%,rgba(0,0,0,.042) 86.1%,rgba(0,0,0,.021) 91%,rgba(0,0,0,.008) 95.2%,rgba(0,0,0,.002) 98.2%,transparent)',
+
+  videosContainer: {
+    height: '100%',
+    padding: '0 8px 8px',
   },
-  gradientBottom: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
-    pointerEvents: 'none',
-    transform: 'scaleY(-1)',
-    height: 160,
-    backgroundImage: 'linear-gradient(#000,rgba(0,0,0,.738) 19%,rgba(0,0,0,.541) 34%,rgba(0,0,0,.382) 47%,rgba(0,0,0,.278) 56.5%,rgba(0,0,0,.194) 65%,rgba(0,0,0,.126) 73%,rgba(0,0,0,.075) 80.2%,rgba(0,0,0,.042) 86.1%,rgba(0,0,0,.021) 91%,rgba(0,0,0,.008) 95.2%,rgba(0,0,0,.002) 98.2%,transparent)',
+  mainVideoContainer: {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
   },
-  video: {
-    marginTop: 48,
-    marginBottom: 56,
-    height: 'calc(100% - 48px - 56px)',
+  mainVideoWrapper: {
+    background: 'rgb(45, 41, 40)',
     width: '100%',
+    paddingTop: '56.25%',
+    position: 'relative',
+    borderRadius: 8,
   },
-  topControls: {
-    height: 48
+
+  listVideoContainer: {
+    height: '100vh',
+    margin: '8px 0',
+    paddingRight: 0,
+    display: 'flex',
+    alignItems: 'center',
   },
-  bottomControls: {
-    height: 56,
-    display: 'flex'
+  listVideoContainerInner: {
+    width: 228,
+    // height: '100%',
+    maxHeight: '100%',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    paddingRight: 8,
+  },
+  sideVideoWrapper: {
+    position: 'relative',
+    background: 'rgb(45, 41, 40)',
+    width: 228,
+    height: 125,
+    borderRadius: 8,
+    margin: '4px 0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 })
